@@ -1,0 +1,2 @@
+id	name	email	email_verified_at	level_id
+1	admin	admin@email.com	2023-03-26 00:16:11	1

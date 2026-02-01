@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class HomeController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        return view('home');
+    }
+    public function qrcodeUrl($no){
+        $data = DB::table('d_pendaftaran')->where('no_daftar','=', $no)->first();
+        if($data){
+            return redirect('/pendaftaran/show?idp='.$data->id);
+        }else{
+            return redirect('/');
+        }
+    }
+    
+}
