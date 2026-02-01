@@ -64,8 +64,14 @@ class Setting extends Component
     }
 
     public function save(){
+        // Sanitize HTML input using Mews Purifier
+        $this->informasi = clean($this->informasi);
+        $this->profil = clean($this->profil);
+
+        // Add class img-fluid to images (Optional preservation of original logic if needed, but clean() handles much of this safely)
         $this->informasi = str_replace( '<img src', '<img class="img-fluid" src', $this->informasi, $num );
         $this->profil = str_replace( '<img src', '<img class="img-fluid" src', $this->profil, $num );
+        
         DB::table('d_setting')->where('id', '=', 1)->update([
             'selamat_datang' => $this->selamat_datang,
             'head_welcome' => $this->head_welcome,
