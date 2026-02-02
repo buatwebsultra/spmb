@@ -24,8 +24,10 @@
             Pengguna
             <span class="float-end">
                 <div class="input-group input-group-sm mb-0">
+                    @if(auth()->user()->jurusan_id == 0)
                     <button type="button" class="btn btn-sm btn-outline-light ml-2 "  data-bs-toggle="modal" data-bs-target="#staticBackdrop" 
                     wire:click="tambah" ><i class="bi bi-person-plus-fill"></i> User Admin</button>
+                    @endif
                 </div>
             </span>
         </div>
@@ -63,7 +65,7 @@
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Verifikasi Email</th>
-                            <th>Level</th>
+                            <th>Level / Jurusan</th>
                             <th>Pendaftar</th>
                             <th class="text-end">Aksi</th>
                         </tr>
@@ -75,7 +77,12 @@
                             <td>{{$val->name}}</td>
                             <td>{{$val->email}}</td>
                             <td>{{\Carbon\Carbon::parse($val->email_verified_at)->isoFormat('dddd, D MMM YYYY')}}</td>
-                            <td><small>{{$val->level}}</small></td>
+                            <td>
+                                <small>{{$val->level}}</small>
+                                @if($val->jurusan_id)
+                                    <br><span class="badge bg-info text-dark">{{$val->jurusan_nama}}</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($val->pendaftaran_id>0)
                                 <small>
@@ -90,9 +97,8 @@
                             <td  class="text-end">
                                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
                                     <button 
-                                        {{-- @if($val->pendaftaran_id>0) disabled @endif  --}}
-                                        wire:click="edit({{$val->id}})"type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ><i class="bi bi-pencil"></i></button>
-                                    @if($val->id>1)
+                                        wire:click="edit({{$val->id}})"type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ><i class="bi bi-{{auth()->user()->jurusan_id > 0 ? 'key' : 'pencil'}}"></i></button>
+                                    @if($val->id>1 && auth()->user()->jurusan_id == 0)
                                     <button @if($val->pendaftaran_id>0) disabled @endif wire:click="confirmHapus({{$val->id}})"type="button" class="btn btn-danger"><i class="bi bi-x"></i></button>
                                     @endif
                                 </div>
@@ -110,23 +116,34 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">{{$idu==null ? 'Tambah' : 'Edit'}} User Admin</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">{{$idu==null ? 'Tambah' : (auth()->user()->jurusan_id > 0 ? 'Reset Password' : 'Edit')}} User</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <div class="input-group mb-2 input-group-sm">
                         <span class="input-group-text" id="basic-addon1" style="width: 10rem">Nama Lengkap</span>
-                        <input required wire:model="name" type="text" class="form-control {{!$name ? 'is-invalid' : 'is-valid'}}" placeholder="Nama lengkap user" aria-label="Username" aria-describedby="basic-addon1">
+                        <input {{auth()->user()->jurusan_id > 0 ? 'readonly' : ''}} required wire:model="name" type="text" class="form-control {{!$name ? 'is-invalid' : 'is-valid'}}" placeholder="Nama lengkap user" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-2 input-group-sm">
                         <span class="input-group-text" id="basic-addon1e" style="width: 10rem">User Email</span>
-                        <input required wire:model="email" type="text" class="form-control {{!$email ? 'is-invalid' : 'is-valid'}}" placeholder="Email aktif user" aria-label="Email" aria-describedby="basic-addon1e">
+                        <input {{auth()->user()->jurusan_id > 0 ? 'readonly' : ''}} required wire:model="email" type="text" class="form-control {{!$email ? 'is-invalid' : 'is-valid'}}" placeholder="Email aktif user" aria-label="Email" aria-describedby="basic-addon1e">
                     </div>
                     <div class="input-group mb-2 input-group-sm">
                         <span class="input-group-text" id="basic-addon1p" style="width: 10rem">User Password</span>
                         <input required wire:model="password" type="text" class="form-control {{!$password ? 'is-invalid' : 'is-valid'}}" placeholder="{{$idu>0 ? 'Kosongkan jika tidak ingin merubah' : 'Password user'}}" aria-label="password" aria-describedby="basic-addon1p">
                     </div>
+                    @if(auth()->user()->jurusan_id == 0)
+                    <div class="input-group mb-2 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1j" style="width: 10rem">Khusus Jurusan</span>
+                        <select wire:model="jurusan_id" class="form-select">
+                            <option value="">--Semua Jurusan--</option>
+                            @foreach ($jurusan as $j)
+                                <option value="{{$j->id}}">{{$j->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" wire:click="clear" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i> Batal</button>

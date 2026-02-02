@@ -9,47 +9,80 @@ class ImageController extends Controller
 {
     //
     public function image($filename){
-        $img =  Image::make(storage_path('app/images/').$filename);
+        $path = storage_path('app/images/').$filename;
+        if (!file_exists($path)) $path = public_path('images/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('jpg');
     }
     public function photo($filename){
-        $img =  Image::make(storage_path('app/photo/').$filename);
+        $path = storage_path('app/photo/').$filename;
+        if (!file_exists($path)) $path = public_path('photo/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('jpg');
     }
     public function ijazah($filename){
-        $img =  Image::make(storage_path('app/ijazah/').$filename);
+        $path = storage_path('app/ijazah/').$filename;
+        if (!file_exists($path)) $path = public_path('ijazah/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('jpg');
     }
     public function transkip($filename){
-        $img =  Image::make(storage_path('app/transkip/').$filename);
+        $path = storage_path('app/transkip/').$filename;
+        if (!file_exists($path)) $path = public_path('transkip/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('jpg');
     }
     public function ortuTtd($filename){
-        $img =  Image::make(storage_path('app/ortu_ttd/').$filename);
+        $path = storage_path('app/ortu_ttd/').$filename;
+        if (!file_exists($path)) $path = public_path('ortu_ttd/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('png');
     }
     public function mabaTtd($filename){
-        $img =  Image::make(storage_path('app/ttd/').$filename);
+        $path = storage_path('app/ttd/').$filename;
+        if (!file_exists($path)) $path = public_path('ttd/').$filename;
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('png');
     }
     public function bglunas(){
-        $img =  Image::make(storage_path('app/lunas.png'));
+        $path = storage_path('app/lunas.png');
+        if (!file_exists($path)) $path = public_path('images/lunas.png');
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('png');
     }
     public function bgunpaid(){
-        $img =  Image::make(storage_path('app/unpaid.png'));
+        $path = storage_path('app/unpaid.png');
+        if (!file_exists($path)) $path = public_path('images/unpaid.png');
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('png');
     }
     public function bghead(){
         $set = DB::table('d_setting')->first();
-        if($set->bg_head==null) $img =  Image::make(storage_path('app/maba.jpg'));
-        $img =  Image::make(storage_path('app/bghead/'.$set->bg_head));
+        if($set->bg_head==null) {
+            $path = storage_path('app/maba.jpg');
+            if (!file_exists($path)) $path = public_path('images/maba.jpg');
+        } else {
+            $path = storage_path('app/bghead/'.$set->bg_head);
+            if (!file_exists($path)) $path = public_path('bghead/'.$set->bg_head);
+        }
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('jpg');
     }
     public function logo(){
         $set = DB::table('d_setting')->first();
-        // if($set->bg_head==null) $img =  Image::make(storage_path('app/maba.jpg'));
-        $img =  Image::make(storage_path('app/logo/'.$set->logo_app));
+        $path = storage_path('app/logo/'.$set->logo_app);
+        if (!file_exists($path)) $path = public_path('logo/'.$set->logo_app);
+        if (!file_exists($path)) abort(404);
+        $img =  Image::make($path);
         return $img->response('png');
     }
     public function upload(Request $request){

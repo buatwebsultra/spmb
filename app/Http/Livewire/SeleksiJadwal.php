@@ -39,7 +39,11 @@ class SeleksiJadwal extends Component
 
     public function render()
     {
-        $this->listjurusan = DB::table('m_jurusan')->get();
+        $jurusan = DB::table('m_jurusan');
+        if (auth()->user()->jurusan_id > 0) {
+            $jurusan = $jurusan->where('id', auth()->user()->jurusan_id);
+        }
+        $this->listjurusan = $jurusan->get();
         $this->setFilter();
 
         $data = $this->getData();
@@ -71,6 +75,10 @@ class SeleksiJadwal extends Component
         DB::raw('if(i.id='.$this->idp.', 1, 0) as onedit'),
         DB::raw('concat(sj.tanggal," ", sj.jam) as tanggal_jam')
     );
+
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
+        }
 
         if($cari!=''){
             $data = $data->where(function($q)use($cari){

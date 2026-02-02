@@ -121,21 +121,29 @@
                                 @endif
 
                                 @if (Route::has('setting'))
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle {{ str_contains(Route::currentRouteName(), 'setting') ? ' active':''}}" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        <i class="bi bi-gear"></i> Pengaturan</a>
-                                    </a>
+                                    @if(auth()->user()->jurusan_id > 0)
+                                        @if (Route::has('setting.pengguna'))
+                                            <li class="nav-item">
+                                                <a class="nav-link {{ Route::currentRouteName() == 'setting.pengguna' ? ' active':''}}" href="{{ route('setting.pengguna') }}"><i class="bi bi-person"></i> {{ __('Data Akun MABA') }}</a>
+                                            </li>
+                                        @endif
+                                    @else
+                                        <li class="nav-item dropdown">
+                                            <a id="navbarDropdown" class="nav-link dropdown-toggle {{ str_contains(Route::currentRouteName(), 'setting') ? ' active':''}}" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                                <i class="bi bi-gear"></i> Pengaturan</a>
+                                            </a>
 
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item {{ Route::currentRouteName() == 'setting.aplikasi' || Route::currentRouteName() == 'setting' ? ' fw-bold ':''}}" href="{{ route('setting.aplikasi') }}">
-                                            <i class="bi bi-gear"></i> Aplikasi
-                                        </a>
-                                        <hr class="dropdown-divider">
-                                        <a class="dropdown-item {{ Route::currentRouteName() == 'setting.pengguna' ? ' fw-bold ':''}}" href="{{ route('setting.pengguna') }}">
-                                            <i class="bi bi-person"></i> Pengguna
-                                        </a>
-                                    </div>
-                                </li>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                                <a class="dropdown-item {{ Route::currentRouteName() == 'setting.aplikasi' || Route::currentRouteName() == 'setting' ? ' fw-bold ':''}}" href="{{ route('setting.aplikasi') }}">
+                                                    <i class="bi bi-gear"></i> Aplikasi
+                                                </a>
+                                                <hr class="dropdown-divider">
+                                                <a class="dropdown-item {{ Route::currentRouteName() == 'setting.pengguna' ? ' fw-bold ':''}}" href="{{ route('setting.pengguna') }}">
+                                                    <i class="bi bi-person"></i> Pengguna
+                                                </a>
+                                            </div>
+                                        </li>
+                                    @endif
                                 @endif
                             @endif
                         @endauth

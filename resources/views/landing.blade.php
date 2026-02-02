@@ -46,7 +46,7 @@
       <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -25%" data-bs-smooth-scroll="true" 
                     class="scrollspy-example rounded-2" tabindex="0" style="background-color: #4cc8fb">
         <div id="scrollspyHeading1" class="container-fluid min-vh-100 d-flex flex-column mb-4" 
-          style="background-image: url({{url('/bghead')}}); background-repeat: no-repeat; background-size: cover; background-position: center;">
+          style="background: {{ $setting->bg_head ? 'url('.asset('storage/bghead/'.$setting->bg_head).')' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}; background-repeat: no-repeat; background-size: cover; background-position: center;">
           <div class="row flex-grow-1 px-3 text-center  d-flex align-items-center">
             <div class="col text-light">
               <h1>{{$setting->head_welcome}}</h1>

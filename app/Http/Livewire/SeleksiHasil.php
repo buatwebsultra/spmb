@@ -48,7 +48,11 @@ class SeleksiHasil extends Component
     public function render()
     {
         $this->jurusan_pilihan = $this->pilJurusan($this->idp);
-        $this->listjurusan = DB::table('m_jurusan')->get();
+        $jurusan = DB::table('m_jurusan');
+        if (auth()->user()->jurusan_id > 0) {
+            $jurusan = $jurusan->where('id', auth()->user()->jurusan_id);
+        }
+        $this->listjurusan = $jurusan->get();
         $this->setFilter();
 
         $data = $this->getData();
@@ -83,6 +87,10 @@ class SeleksiHasil extends Component
         ->select('i.*', 'j.nama as jurusan',  'sj.tanggal_pengumuman', 'sj.status', 'sj.nilai', 'ms.nama as status_label', 'sw.ruangan', 'mj.nama as jurusan_pilihan',
         DB::raw('if(i.id='.$this->idp.', 1, 0) as onedit')
         );
+
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
+        }
 
         if($cari!=''){
             $data = $data->where(function($q)use($cari){

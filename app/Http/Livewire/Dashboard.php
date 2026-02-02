@@ -10,7 +10,12 @@ class Dashboard extends Component
 {
     public function render()
     {
-        $prodi = DB::table('m_jurusan')->get();
+        $prodi = DB::table('m_jurusan');
+        if (auth()->user()->jurusan_id > 0) {
+            $prodi = $prodi->where('id', auth()->user()->jurusan_id);
+        }
+        $prodi = $prodi->get();
+
         $columnChartModel = 
         (new ColumnChartModel())->withDataLabels();//->setTitle('Pendaftar Berdasarkan Prodi');
         foreach ($prodi as $key => $value) {

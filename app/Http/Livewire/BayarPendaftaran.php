@@ -34,7 +34,11 @@ class BayarPendaftaran extends Component
     {
         $set = DB::table('d_setting')->first();
         $this->jumlah = $set->biaya_pendaftaran;
-        $this->listjurusan = DB::table('m_jurusan')->get();
+        $jurusan = DB::table('m_jurusan');
+        if (auth()->user()->jurusan_id > 0) {
+            $jurusan = $jurusan->where('id', auth()->user()->jurusan_id);
+        }
+        $this->listjurusan = $jurusan->get();
         return view('livewire.bayar-pendaftaran', [
             'data' => $this->getPaginate(),
         ])
@@ -56,6 +60,9 @@ class BayarPendaftaran extends Component
                 $q->orWhere('i.nama_depan', 'like', '%'.$cari.'%');
                 $q->orWhere('i.no_daftar', 'like', '%'.$cari.'%');
             });
+        }
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
         }
         if($this->filjurusan>0){
             $data = $data->where('i.jurusan_id', '=', $this->filjurusan);

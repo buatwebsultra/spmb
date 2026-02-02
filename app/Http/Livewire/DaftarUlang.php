@@ -33,7 +33,11 @@ class DaftarUlang extends Component
     }
     public function render()
     {
-        $this->listjurusan = DB::table('m_jurusan')->get();
+        $jurusan = DB::table('m_jurusan');
+        if (auth()->user()->jurusan_id > 0) {
+            $jurusan = $jurusan->where('id', auth()->user()->jurusan_id);
+        }
+        $this->listjurusan = $jurusan->get();
         return view('livewire.daftar-ulang', [
             'data' => $this->getPaginate(),
         ])
@@ -56,6 +60,10 @@ class DaftarUlang extends Component
         'ma.nama as agama', 
         DB::raw('(bs.spp+bs.pendidikan+bs.almamater+bs.lain) as biaya')
     );
+
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
+        }
 
         if($cari!=''){
             $data = $data->where(function($q)use($cari){

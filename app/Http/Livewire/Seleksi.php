@@ -25,8 +25,13 @@ class Seleksi extends Component
         
             ->join('d_bayar_pendaftaran as bp', 'bp.pendaftaran_id', '=', 'i.id')
             ->leftJoin('d_seleksi_jadwal as sj','sj.pendaftaran_id','=', 'i.id')
-            ->leftJoin('m_jurusan as j', 'j.id', '=', 'sj.jurusan_id')
-            ->select('i.*', 'j.nama as jurusan',  'sj.tanggal', 'sj.jam', 'sj.ruangan')
+            ->leftJoin('m_jurusan as j', 'j.id', '=', 'sj.jurusan_id');
+        
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
+        }
+
+        $data = $data->select('i.*', 'j.nama as jurusan',  'sj.tanggal', 'sj.jam', 'sj.ruangan')
             ->orderBy('sj.tanggal', 'asc')
             ->orderBy('sj.ruangan', 'asc')
             ->orderBy('i.no_daftar', 'asc')
@@ -57,8 +62,13 @@ class Seleksi extends Component
             ->join('d_bayar_pendaftaran as bp', 'bp.pendaftaran_id', '=', 'i.id')
             ->join('d_seleksi_jadwal as sj','sj.pendaftaran_id','=', 'i.id')
             ->join('d_seleksi_hasil as sh','sh.pendaftaran_id','=', 'i.id')
-            ->join('m_jurusan as j', 'j.id', '=', 'sh.jurusan_id')
-            ->leftJoin('m_status as ms', 'ms.id', '=', 'sh.status')
+            ->join('m_jurusan as j', 'j.id', '=', 'sh.jurusan_id');
+        
+        if (auth()->user()->jurusan_id > 0) {
+            $data = $data->where('i.jurusan_id', '=', auth()->user()->jurusan_id);
+        }
+
+        $data = $data->leftJoin('m_status as ms', 'ms.id', '=', 'sh.status')
             ->select('i.*', 'j.nama as jurusan',  'sj.tanggal', 'sj.jam', 'sj.ruangan', 'sh.nilai', 'ms.nama as status')
             ->orderBy('sj.tanggal', 'asc')
             ->orderBy('sj.ruangan', 'asc')
