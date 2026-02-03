@@ -38,7 +38,7 @@
                         <img class="img-fluid" src="{{ $logo->temporaryUrl() }}">
                     @else
                         @if($logo_app)
-                        <img class="img-fluid" src="{{ url('/logo') }}">
+                        <img class="img-fluid" src="{{ asset('logo/'.$logo_app) }}">
                         @endif
                     @endif
                     <br>
@@ -52,7 +52,7 @@
                     <img class="img-fluid" src="{{ $photo->temporaryUrl() }}">
                 @else
                     @if($bg_head)
-                    <img class="img-fluid" src="{{ url('/bghead') }}">
+                    <img class="img-fluid" src="{{ asset('bghead/'.$bg_head) }}">
                     @endif
                 @endif
             
