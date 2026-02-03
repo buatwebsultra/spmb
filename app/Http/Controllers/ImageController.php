@@ -16,6 +16,7 @@ class ImageController extends Controller
         $img =  Image::make($path);
         return $img->response('jpg');
     }
+
     public function photo($filename){
         $path = storage_path('app/photo/').$filename;
         if (!file_exists($path)) $path = public_path('photo/').$filename;
@@ -72,6 +73,7 @@ class ImageController extends Controller
             if (!file_exists($path)) $path = public_path('images/maba.jpg');
         } else {
             $path = storage_path('app/bghead/'.$set->bg_head);
+            if (!file_exists($path)) $path = storage_path('app/public/bghead/'.$set->bg_head);
             if (!file_exists($path)) $path = public_path('bghead/'.$set->bg_head);
         }
         if (!file_exists($path)) abort(404);
@@ -81,6 +83,7 @@ class ImageController extends Controller
     public function logo(){
         $set = DB::table('d_setting')->first();
         $path = storage_path('app/logo/'.$set->logo_app);
+        if (!file_exists($path)) $path = storage_path('app/public/logo/'.$set->logo_app);
         if (!file_exists($path)) $path = public_path('logo/'.$set->logo_app);
         if (!file_exists($path)) abort(404);
         $img =  Image::make($path);
