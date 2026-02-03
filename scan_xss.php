@@ -18,14 +18,17 @@ $patterns = [
     'document.cookie'
 ];
 
-$tables = DB::select('SHOW TABLES');
-$dbName = 'db_spmb_2026';
-$tableKey = "Tables_in_$dbName";
+// Get all table names using Schema facade (works with SQLite and MySQL)
+$tables = Schema::getAllTables();
+$tableNames = array_map(function($table) {
+    // Extract table name from object (format varies by driver)
+    $tableArray = (array) $table;
+    return reset($tableArray);
+}, $tables);
 
 $findings = [];
 
-foreach ($tables as $tableInfo) {
-    $table = $tableInfo->$tableKey;
+foreach ($tableNames as $table) {
     $columns = Schema::getColumnListing($table);
     
     foreach ($columns as $column) {

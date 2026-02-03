@@ -46,5 +46,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (\Illuminate\Database\QueryException $e, $request) {
+            if (str_contains($e->getMessage(), 'SQLSTATE[HY000] [2002]') || str_contains($e->getMessage(), 'Connection refused')) {
+                return response()->view('errors.database', [], 500);
+            }
+        });
     }
 }

@@ -145,21 +145,21 @@
                                     @if($val->photo_image)
                                         <img wire:click="showImage('{{url('/photo/'.$val->photo_image)}}')" src="{{url('/photo/'.$val->photo_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->photo_image}}">
                                     @else
-                                    <i class="bi bi-x text-danger"></i>
+                                    <span class="text-danger small">Belum Upload</span>
                                     @endif
                                 </div>
                                 <div class="col-4 p-1 border rounded">
                                     @if($val->ijazah_image)
                                         <img wire:click="showImage('{{url('/ijazah/'.$val->ijazah_image)}}')" src="{{url('/ijazah/'.$val->ijazah_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->ijazah_image}}">
                                         @else
-                                        <i class="bi bi-x text-danger"></i>
+                                        <span class="text-danger small">Belum Upload</span>
                                     @endif
                                 </div>
                                 <div class="col-4 p-1 border rounded">
                                     @if($val->transkip_image)
                                         <img wire:click="showImage('{{url('/transkip/'.$val->transkip_image)}}')" src="{{url('/transkip/'.$val->transkip_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->transkip_image}}">
                                         @else
-                                        <i class="bi bi-x text-danger"></i>
+                                        <span class="text-danger small">Belum Upload</span>
                                     @endif
                                 </div>
                             </div>
