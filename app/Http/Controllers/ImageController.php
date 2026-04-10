@@ -99,32 +99,6 @@ class ImageController extends Controller
         }
         abort(404);
     }
-    public function bglunas(){
-        $paths = [
-            storage_path('app/lunas.png'),
-            public_path('images/lunas.png')
-        ];
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                $img = Image::make($path);
-                return $img->response('png');
-            }
-        }
-        abort(404);
-    }
-    public function bgunpaid(){
-        $paths = [
-            storage_path('app/unpaid.png'),
-            public_path('images/unpaid.png')
-        ];
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                $img = Image::make($path);
-                return $img->response('png');
-            }
-        }
-        abort(404);
-    }
     public function bghead(){
         $set = DB::table('d_setting')->first();
         if($set->bg_head==null) {

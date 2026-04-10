@@ -22,9 +22,6 @@ Route::get('/bghead', [App\Http\Controllers\ImageController::class, 'bghead']);
 Route::get('/app-logo', [App\Http\Controllers\ImageController::class, 'logo']);
 Route::get('/pdf-pengumuman/{id}', [App\Http\Controllers\PrintController::class, 'getPdfPengumuman']);
 
-Route::get('/bglunas', [App\Http\Controllers\ImageController::class, 'bglunas']);
-Route::get('/bgunpaid', [App\Http\Controllers\ImageController::class, 'bgunpaid']);
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', App\Http\Livewire\Dashboard::class)->name('home');
     Route::group(['prefix'=>'pendaftaran'], function(){
