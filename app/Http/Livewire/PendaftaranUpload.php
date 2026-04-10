@@ -216,7 +216,11 @@ class PendaftaranUpload extends Component
             $filename = $no_daftar.'.'.$ext;
 
             $folder = $this->isttdortu ? 'ortu_ttd' : 'ttd';
-            $path = storage_path('app/'.$folder.'/'.$filename);
+            $dir = storage_path('app/'.$folder);
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+            $path = $dir.'/'.$filename;
             $img = Image::make($this->ttd64)->trim();
             $img->save($path);
 
@@ -240,7 +244,11 @@ class PendaftaranUpload extends Component
             $no_daftar = $this->data ? $this->data['no_daftar'] : '';
             $ext = 'png';
             $filename = $no_daftar.'.'.$ext;
-            $path = storage_path('app/ttd/'.$filename);
+            $dir = storage_path('app/ttd');
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+            $path = $dir.'/'.$filename;
             $img = Image::make($this->ttd64)->trim();
             $img->save($path);
 

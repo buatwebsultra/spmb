@@ -187,7 +187,11 @@ class PendaftaranShow extends Component
             // $pdfc = Pdf::loadHTML($html);
                
             // return response()->streamDownload(fn () => print($pdf), $filename);
-            $pdfc->save(storage_path('/app/pdf/'.$filename));
+            $dir = storage_path('app/pdf');
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+            $pdfc->save($dir.'/'.$filename);
             // return $pdfc->stream();
         }
         
