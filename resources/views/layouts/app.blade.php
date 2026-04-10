@@ -134,10 +134,12 @@
                                             </a>
 
                                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                                @if(auth()->user()->email == 'admin@email.com')
                                                 <a class="dropdown-item {{ Route::currentRouteName() == 'setting.aplikasi' || Route::currentRouteName() == 'setting' ? ' fw-bold ':''}}" href="{{ route('setting.aplikasi') }}">
                                                     <i class="bi bi-gear"></i> Aplikasi
                                                 </a>
                                                 <hr class="dropdown-divider">
+                                                @endif
                                                 <a class="dropdown-item {{ Route::currentRouteName() == 'setting.pengguna' ? ' fw-bold ':''}}" href="{{ route('setting.pengguna') }}">
                                                     <i class="bi bi-person"></i> Pengguna
                                                 </a>

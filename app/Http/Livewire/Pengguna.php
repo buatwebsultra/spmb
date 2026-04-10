@@ -94,6 +94,12 @@ class Pengguna extends Component
                     return $this->clear();
                 }
             }
+            
+            // Sultan/Middle Admin cannot edit Super Admin
+            if (auth()->user()->email != 'admin@email.com' && $data->email == 'admin@email.com') {
+                session()->flash('error', 'Anda tidak memiliki akses untuk mengubah akun Super Admin.');
+                return $this->clear();
+            }
             $this->idu = $idu;
             $this->name = $data->name;
             $this->email = $data->email;
@@ -109,6 +115,11 @@ class Pengguna extends Component
         if (auth()->user()->jurusan_id > 0 && !$this->idu) return;
 
         if ($this->idu > 0) {
+            $check = DB::table('users')->where('id', $this->idu)->first();
+            if (auth()->user()->email != 'admin@email.com' && $check->email == 'admin@email.com') {
+                session()->flash('error', 'Akses ditolak.');
+                return $this->clear();
+            }
             $this->rules['email'] = 'required|email|unique:users,email,' . $this->idu;
         }
 
@@ -165,7 +176,12 @@ class Pengguna extends Component
     public function confirmHapus($idu){
         if (auth()->user()->jurusan_id > 0) return;
         $data = DB::table('users')->where('id', '=', $idu)->where('id', '>', 1)->where('pendaftaran_id',  '=', null)->first();
+        
         if($data){
+            if (auth()->user()->email != 'admin@email.com' && $data->email == 'admin@email.com') {
+                session()->flash('error', 'Akses ditolak.');
+                return;
+            }
             $this->idu = $data->id;
             $nama = $data->name;
             $this->emit('confirmHapus', 'Data user '.$nama.', Yakin akan dihapus?');

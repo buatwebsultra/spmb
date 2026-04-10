@@ -22,7 +22,7 @@ class Setting extends Component
 
 
     public function mount(){
-        if (auth()->user()->jurusan_id > 0) {
+        if (auth()->user()->jurusan_id > 0 || auth()->user()->email != 'admin@email.com') {
             abort(403);
         }
         $this->getData();
