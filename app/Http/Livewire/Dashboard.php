@@ -38,7 +38,13 @@ class Dashboard extends Component
         $prodi = $prodi->get();
 
         $columnChartModel = 
-        (new ColumnChartModel())->withDataLabels();//->setTitle('Pendaftar Berdasarkan Prodi');
+        (new ColumnChartModel())
+            ->withDataLabels()
+            ->setAnimated(true)
+            ->setOpacity(0.85)
+            ->withGrid()
+            ->setColumnWidth(45);
+            
         foreach ($prodi as $key => $value) {
             $pendaftarQuery = DB::table('d_pendaftaran')->where('jurusan_id', '=', $value->id);
             if ($this->tahun && $this->tahun != 'Semua') {
@@ -47,7 +53,13 @@ class Dashboard extends Component
             $columnChartModel->addColumn($value->nama, $pendaftarQuery->count(), $this->getColor($value->id));
         }
         $columnChartModel2 = 
-        (new ColumnChartModel())->withDataLabels();//->setTitle('Daftar Ulang Berdasarkan Prodi');
+        (new ColumnChartModel())
+            ->withDataLabels()
+            ->setAnimated(true)
+            ->setOpacity(0.85)
+            ->withGrid()
+            ->setColumnWidth(45);
+            
         foreach ($prodi as $key => $value) {
             $daftarUlangQuery = DB::table('d_pendaftaran as p')->join('d_daftar_ulang as du', 'du.pendaftaran_id','=','p.id')->where('du.jurusan_id', '=', $value->id);
             if ($this->tahun && $this->tahun != 'Semua') {

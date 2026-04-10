@@ -12,21 +12,31 @@
             </select>
         </div>
     </div>
-    <div class="row mb-4 border bg-white shadow">
-        <div class="col">
-            <h6 class="text-center mt-2"><strong>{{$title1}}</strong></h6>
-            <div class="p-2 bg-white " style="height: 36rem;" >
-                <livewire:livewire-column-chart key="{{ 'chart-pendaftar-'.$tahun }}" :column-chart-model="$columnChartModel"/>
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafd 100%);">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-4" style="color: #2c3e50; font-weight: 700;">
+                        <i class="bi bi-bar-chart-fill text-primary me-2"></i> {{$title1}}
+                    </h5>
+                    <div class="w-100" style="height: 32rem;" >
+                        <livewire:livewire-column-chart key="{{ 'chart-pendaftar-'.$tahun }}" :column-chart-model="$columnChartModel"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <br>
-    <div class="row mb-4 bg-white border shadow">
-        <div class="col">
-            <h6 class="text-center  mt-2"><strong>{{$title2}}</strong></h6>
-            <div class="p-2 bg-white" style="height: 36rem;">
-                
-                <livewire:livewire-column-chart key="{{ 'chart-daftarulang-'.$tahun }}" :column-chart-model="$columnChartModel2"/>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafd 100%);">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-4" style="color: #2c3e50; font-weight: 700;">
+                        <i class="bi bi-pie-chart-fill text-success me-2"></i> {{$title2}}
+                    </h5>
+                    <div class="w-100" style="height: 32rem;">
+                        <livewire:livewire-column-chart key="{{ 'chart-daftarulang-'.$tahun }}" :column-chart-model="$columnChartModel2"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
