@@ -73,7 +73,7 @@
         <nav class="navbar navbar-expand-lg bg-success navbar-dark text-white fixed-top">
           <div class="container-fluid">
             <a class="navbar-brand flex-nowrap" href="/">
-              <img src="{{url('/assets/alumni_uho.png')}}" alt="AlumniUHO" class="d-inline-block align-text-top">
+              <img src="{{url('/app-logo')}}" style="height: 40px" alt="{{$setting_app->instansi}}" class="d-inline-block align-text-top">
               <i class="bi bi-house"  style="vertical-align: -0.5em;"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,7 +121,7 @@
         
         
         <footer class="blog-footer text-light" style="background-color: orange">
-          <span>Copyright © UHO. All right reserved.</span>
+          <span>Copyright © {{$setting_app->instansi}}. All right reserved.</span>
           <button type="button" class="btn btn-success btn-floating btn-md" id="btn-back-to-top">
             <i class="bi bi-arrow-up"></i>
           </button>

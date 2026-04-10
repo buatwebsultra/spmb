@@ -3,7 +3,7 @@
         <tbody>
             <tr>
                 <td class="text-center"  style="vertical-align: middle">
-                    <img src="{{url('/logo')}}" style="width: 80px;" alt="StikesPIK">
+                    <img src="{{url('/app-logo')}}" style="width: 80px;" alt="StikesPIK">
                 </td>
                 <td colspan="4" style="vertical-align: middle">
                     <h2 class="text-center">{{$instansi}}</h2>
@@ -58,7 +58,7 @@
             <div class="row border-bottom d-flex align-items-center pb-2 mb-2">
                 <div class="col-2">
                     <span class="float-start">
-                        <img src="{{url('/logo')}}" style="width: 80px;" alt="StikesPIK">
+                        <img src="{{url('/app-logo')}}" style="width: 80px;" alt="StikesPIK">
                     </span>
                 </div>
                 <div class="col">

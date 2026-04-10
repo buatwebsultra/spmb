@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Image;
 class ImageController extends Controller
 {
@@ -17,40 +19,60 @@ class ImageController extends Controller
         return $img->response('jpg');
     }
 
-    public function photo($filename){
-        $path = storage_path('app/photo/').$filename;
-        if (!file_exists($path)) $path = public_path('photo/').$filename;
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('jpg');
+    public function photo($image){
+        $paths = [
+            storage_path('app/photo/'.$image),
+            public_path('app/photo/'.$image),
+            public_path('photo/'.$image)
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
-    public function ijazah($filename){
-        $path = storage_path('app/ijazah/').$filename;
-        if (!file_exists($path)) $path = public_path('ijazah/').$filename;
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('jpg');
+    public function ijazah($image){
+        $paths = [
+            storage_path('app/ijazah/'.$image),
+            public_path('app/ijazah/'.$image),
+            public_path('ijazah/'.$image)
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
-    public function transkip($filename){
-        $path = storage_path('app/transkip/').$filename;
-        if (!file_exists($path)) $path = public_path('transkip/').$filename;
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('jpg');
+    public function transkip($image){
+        $paths = [
+            storage_path('app/transkip/'.$image),
+            public_path('app/transkip/'.$image),
+            public_path('transkip/'.$image)
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
-    public function ortuTtd($filename){
-        $path = storage_path('app/ortu_ttd/').$filename;
-        if (!file_exists($path)) $path = public_path('ortu_ttd/').$filename;
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('png');
+    public function ortuTtd($image){
+        $paths = [
+            storage_path('app/ortu_ttd/'.$image),
+            public_path('app/ortu_ttd/'.$image),
+            public_path('ortu_ttd/'.$image)
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
-    public function mabaTtd($filename){
-        $path = storage_path('app/ttd/').$filename;
-        if (!file_exists($path)) $path = public_path('ttd/').$filename;
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('png');
+    public function mabaTtd($image){
+        $paths = [
+            storage_path('app/ttd/'.$image),
+            public_path('app/ttd/'.$image),
+            public_path('ttd/'.$image)
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
     public function bglunas(){
         $path = storage_path('app/lunas.png');
@@ -82,12 +104,27 @@ class ImageController extends Controller
     }
     public function logo(){
         $set = DB::table('d_setting')->first();
-        $path = storage_path('app/logo/'.$set->logo_app);
-        if (!file_exists($path)) $path = storage_path('app/public/logo/'.$set->logo_app);
-        if (!file_exists($path)) $path = public_path('logo/'.$set->logo_app);
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('png');
+        if (!$set || !$set->logo_app) abort(404);
+        
+        $logo = trim($set->logo_app);
+        $paths = [
+            public_path('logo/'.$logo),
+            storage_path('app/public/logo/'.$logo),
+            storage_path('app/logo/'.$logo),
+            public_path('storage/logo/'.$logo),
+            public_path('app/logo/'.$logo)
+        ];
+        
+        foreach ($paths as $path) {
+            if (File::exists($path)) {
+                return response()->file($path, [
+                    'Content-Type' => File::mimeType($path),
+                    'Cache-Control' => 'no-cache, must-revalidate'
+                ]);
+            }
+        }
+        
+        abort(404);
     }
     public function upload(Request $request){
         if($request->hasFile('upload')) {

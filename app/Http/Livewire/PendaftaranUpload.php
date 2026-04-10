@@ -26,14 +26,14 @@ class PendaftaranUpload extends Component
     public $isttdortu = true;
 
     protected $rules = [
-        'photo' => 'image|max:1024',
-        'ijazah' => 'image|max:1024',
-        'transkip' => 'image|max:1024',
+        'photo' => 'image|max:500',
+        'ijazah' => 'image|max:500',
+        'transkip' => 'image|max:500',
     ];
     protected $messages = [
-        'photo.max' => 'UKURAN PHOTO tidak boleh lebih dari 1M',
-        'ijazah.max' => 'UKURAN PHOTO tidak boleh lebih dari 1M',
-        'transkip.max' => 'UKURAN PHOTO tidak boleh lebih dari 1M',
+        'photo.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
+        'ijazah.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
+        'transkip.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
     ];
 
     protected $listeners = ['hapusPhoto' => 'hapusPhoto', 'hapusIjazah' => 'hapusIjazah', 'hapusTranskip' => 'hapusTranskip', 
@@ -89,13 +89,19 @@ class PendaftaranUpload extends Component
             $this->ortu_ttd_image = $this->data['ortu_ttd_image'];
             $this->ttd_image = $this->data['ttd_image'];
             if($this->ortu_ttd_image){
-                $img = Image::make(storage_path('app/ortu_ttd/'.$this->ortu_ttd_image));
-                $this->ortu_ttd =  (string) $img->encode('data-url');
-                $this->setTtd($this->ortu_ttd);
-                // $this->emit('hideCanvas');
+                $path = storage_path('app/ortu_ttd/'.$this->ortu_ttd_image);
+                if (!File::exists($path)) $path = public_path('ortu_ttd/'.$this->ortu_ttd_image);
+                
+                if (File::exists($path)) {
+                    $img = Image::make($path);
+                    $this->ortu_ttd =  (string) $img->encode('data-url');
+                    $this->setTtd($this->ortu_ttd);
+                } else {
+                    $this->ortu_ttd_image = null;
+                    $this->setTtd(null);
+                }
             }else{
                 $this->setTtd(null);
-                // $this->emit('showCanvas');
             }
             
         }
@@ -129,21 +135,36 @@ class PendaftaranUpload extends Component
     }
     public function updatedPhoto()
     {
-        $this->validate([
-            'photo' => 'image|max:1024',
-        ]);
+        try {
+            $this->validate([
+                'photo' => 'image|max:500',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->photo = null;
+            throw $e;
+        }
     }
     public function updatedIjazah()
     {
-        $this->validate([
-            'ijazah' => 'image|max:1024',
-        ]);
+        try {
+            $this->validate([
+                'ijazah' => 'image|max:500',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->ijazah = null;
+            throw $e;
+        }
     }
     public function updatedTranskip()
     {
-        $this->validate([
-            'transkip' => 'image|max:1024',
-        ]);
+        try {
+            $this->validate([
+                'transkip' => 'image|max:500',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->transkip = null;
+            throw $e;
+        }
     }
     public function uploadP(){
         if($this->photo){
@@ -241,27 +262,57 @@ class PendaftaranUpload extends Component
         $this->emit('confirmhapusTranskip');
     }
     public function hapusPhoto(){
-        if (File::exists(public_path('app/photo/'.$this->data['photo_image']))) {
-            File::delete(public_path('app/photo/'.$this->data['photo_image']));
+        $image = $this->data['photo_image'];
+        if ($image) {
+            if (File::exists(storage_path('app/photo/'.$image))) {
+                File::delete(storage_path('app/photo/'.$image));
+            }
+            if (File::exists(public_path('app/photo/'.$image))) {
+                File::delete(public_path('app/photo/'.$image));
+            }
+            if (File::exists(public_path('photo/'.$image))) {
+                File::delete(public_path('photo/'.$image));
+            }
         }
         DB::table('d_pendaftaran')->where('id', '=', $this->idp)->update(['photo_image'=>null]);
         $this->photo = null; $this->photo_image = null;
     }
     public function hapusIjazah(){
-        if (File::exists(public_path('app/ijazah/'.$this->data['ijazah_image']))) {
-            File::delete(public_path('app/ijazah/'.$this->data['ijazah_image']));
+        $image = $this->data['ijazah_image'];
+        if ($image) {
+            if (File::exists(storage_path('app/ijazah/'.$image))) {
+                File::delete(storage_path('app/ijazah/'.$image));
+            }
+            if (File::exists(public_path('app/ijazah/'.$image))) {
+                File::delete(public_path('app/ijazah/'.$image));
+            }
+            if (File::exists(public_path('ijazah/'.$image))) {
+                File::delete(public_path('ijazah/'.$image));
+            }
         }
         DB::table('d_pendaftaran')->where('id', '=', $this->idp)->update(['ijazah_image'=>null]);
         $this->ijazah = null; $this->ijazah_image = null;
     }
     public function hapusTranskip(){
-        if (File::exists(public_path('app/transkip/'.$this->data['transkip_image']))) {
-            File::delete(public_path('app/transkip/'.$this->data['transkip_image']));
+        $image = $this->data['transkip_image'];
+        if ($image) {
+            if (File::exists(storage_path('app/transkip/'.$image))) {
+                File::delete(storage_path('app/transkip/'.$image));
+            }
+            if (File::exists(public_path('app/transkip/'.$image))) {
+                File::delete(public_path('app/transkip/'.$image));
+            }
+            if (File::exists(public_path('transkip/'.$image))) {
+                File::delete(public_path('transkip/'.$image));
+            }
         }
         DB::table('d_pendaftaran')->where('id', '=', $this->idp)->update(['transkip_image'=>null]);
         $this->transkip = null; $this->transkip_image = null;
     }
     public function clearErrorBag(){
         $this->resetErrorBag();
+        $this->photo = null;
+        $this->ijazah = null;
+        $this->transkip = null;
     }
 }

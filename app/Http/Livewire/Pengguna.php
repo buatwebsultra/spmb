@@ -16,18 +16,20 @@ class Pengguna extends Component
     public $pillevel = [];
     public $query;
     public $email, $password, $name;
-    public $idu, $jurusan_id;
+    public $idu, $jurusan_id, $level_id;
     protected $listeners = ['hapusUser' => 'hapusUser'];
     public $rules = [
         'name' => 'required',
-        'email' => 'required|email',
-        // 'password' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'level_id' => 'required',
     ];
     public $messages = [
         'name.required' => 'NAMA tidak boleh kosong',
         'email.required' => 'EMAIL tidak boleh kosong',
         'email.email' => 'NAMA EMAIL harus benar',
+        'email.unique' => 'EMAIL sudah terdaftar di sistem',
         'password.required' => 'PASSWORD tidak boleh kosong',
+        'level_id.required' => 'LEVEL tidak boleh kosong',
     ];
 
     public function render()
@@ -78,6 +80,7 @@ class Pengguna extends Component
         $this->password = null;
         $this->jurusan_id = null;
         $this->rules['password'] = 'required';
+        $this->level_id = null;
     }
     public function edit($idu){
         $data = DB::table('users as u')
@@ -95,6 +98,7 @@ class Pengguna extends Component
             $this->name = $data->name;
             $this->email = $data->email;
             $this->jurusan_id = $data->jurusan_id;
+            $this->level_id = $data->level_id;
             $this->password = null;
             $this->rules['password'] = '';
         }else{
@@ -103,6 +107,14 @@ class Pengguna extends Component
     }
     public function save(){
         if (auth()->user()->jurusan_id > 0 && !$this->idu) return;
+
+        if ($this->idu > 0) {
+            $this->rules['email'] = 'required|email|unique:users,email,' . $this->idu;
+        }
+
+        if (auth()->user()->jurusan_id > 0) {
+            unset($this->rules['name'], $this->rules['email'], $this->rules['level_id']);
+        }
 
         $this->validate();
 
@@ -131,17 +143,17 @@ class Pengguna extends Component
                 'name' => $this->name,
                 'email' => $this->email,
                 'jurusan_id' => $this->jurusan_id == '' ? null : $this->jurusan_id,
+                'level_id' => $this->level_id,
             ];
 
             if($this->password){
                 $data['password'] = Hash::make($this->password);
             }
 
-            if($this->idu>0){
+            if($this->idu > 0){
                 DB::table('users')->where('id', '=', $this->idu)->update($data);
                 $msg = 'Sukses update data user';
             }else{
-                $data['level_id'] = 1;
                 $data['created_at'] = \Carbon\Carbon::now()->format('Y-m-d H:i:s');
                 DB::table('users')->insert($data);
                 $msg = 'Sukses tambah data user';
@@ -170,6 +182,7 @@ class Pengguna extends Component
         $this->email = null;
         $this->password = null;
         $this->name = null;
+        $this->level_id = null;
         $this->jurusan_id = null;
     }
 }

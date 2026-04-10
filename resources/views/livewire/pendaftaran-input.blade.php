@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row mb-2">
         <div class="col text-center" >
-            <img src="{{url('/logo')}}" style="width: 120px;" alt="StikesPIK">
+            <img src="{{url('/app-logo')}}?v={{time()}}" style="width: 120px;" alt="StikesPIK">
         </div>
     </div>
     <div class="accordion" id="accordionExample">

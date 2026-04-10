@@ -5,7 +5,7 @@
                 <tbody>
                     <tr>
                         <td class="text-center" colspan="4">
-                            <img class="mt-3 mb-3" src="{{url('/logo')}}" style="width: 120px;" alt="StikesPIK">
+                            <img class="mt-3 mb-3" src="{{url('/app-logo')}}" style="width: 120px;" alt="StikesPIK">
                             <h4 class="text-center mb-0">KARTU PESERTA UJIAN</h4>
                             <h4 class="text-center mb-0">SELEKSI MANDIRI MAHASISWA BARU</h4>
                             <h6 class="text-center">TAHUN AKADEMIK {{$data['ta']}}</h6>

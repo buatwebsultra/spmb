@@ -136,20 +136,27 @@ class Pendaftaran extends Component
     }
     private function hapusAllImage($no_daftar){
         if($no_daftar){
-            if (File::exists(storage_path('app/photo/'.$no_daftar))) {
-                File::delete(storage_path('app/photo/'.$no_daftar));
-            }
-            if (File::exists(storage_path('app/ijazah/'.$no_daftar))) {
-                File::delete(storage_path('app/ijazah/'.$no_daftar));
-            }
-            if (File::exists(storage_path('app/ortu_ttd/'.$no_daftar))) {
-                File::delete(storage_path('app/ortu_ttd/'.$no_daftar));
-            }
-            if (File::exists(storage_path('app/ttd/'.$no_daftar))) {
-                File::delete(storage_path('app/ttd/'.$no_daftar));
+            $exts = ['jpg', 'jpeg', 'png', 'pdf'];
+            $folders = ['photo', 'ijazah', 'ortu_ttd', 'ttd'];
+            
+            foreach ($folders as $folder) {
+                foreach ($exts as $ext) {
+                    $filename = $no_daftar.'.'.$ext;
+                    $path_storage = storage_path('app/'.$folder.'/'.$filename);
+                    if (File::exists($path_storage)) {
+                        File::delete($path_storage);
+                    }
+                    $path_public = public_path($folder.'/'.$filename);
+                    if (File::exists($path_public)) {
+                        File::delete($path_public);
+                    }
+                    $path_public_app = public_path('app/'.$folder.'/'.$filename);
+                    if (File::exists($path_public_app)) {
+                        File::delete($path_public_app);
+                    }
+                }
             }
         }
-        
     }
     public function edit($id){
         session()->flash('id', $id);

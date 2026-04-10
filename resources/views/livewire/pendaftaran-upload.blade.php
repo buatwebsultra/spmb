@@ -110,7 +110,7 @@
                     <img src="{{url('/photo/'.$photo_image)}}" class="img-thumbnail rounded mx-auto d-block" style="max-height: 500px" alt="{{$photo_image}}">
                 @else
                     <div wire:loading.remove>
-                        <input wire:model="photo" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm" id="inputGroupFile01p">
+                        <input wire:key="photo-input" wire:model="photo" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm" id="inputGroupFile01p">
                     </div>
                 @endif
 
@@ -141,7 +141,7 @@
                     <img src="{{url('/ijazah/'.$ijazah_image)}}" class="img-thumbnail rounded mx-auto d-block" style="max-height: 500px" alt="{{$ijazah_image}}">
                 @else
                     <div wire:loading.remove>
-                        <input wire:model="ijazah" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm" id="inputGroupFile01i">
+                        <input wire:key="ijazah-input" wire:model="ijazah" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm" id="inputGroupFile01i">
                     </div>
                 @endif
 
@@ -172,7 +172,7 @@
                     <img src="{{url('/transkip/'.$transkip_image)}}" class="img-thumbnail rounded mx-auto d-block" style="max-height: 500px" alt="{{$transkip_image}}">
                 @else
                     <div wire:loading.remove>
-                        <input wire:model="transkip" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm">
+                        <input wire:key="transkip-input" wire:model="transkip" accept="image/jpg, image/jpeg, image/png" type="file" class="form-control form-control-sm">
                     </div>
                 @endif
 
@@ -250,17 +250,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{-- @if($errors)
-                    <ul class="alert alert-danger">
+                @if($errors->any())
+                    <ul class="list-unstyled text-danger">
                         @foreach ($errors->all() as $error)
-                            <li class="ms-2">{{ $error }}</li>
+                            <li><strong><i class="bi bi-exclamation-triangle"></i> {{ $error }}</strong></li>
                         @endforeach
                     </ul>
-                @endif --}}
-                <p>{{$message}}</p>
+                @else
+                    <p>{{$message}}</p>
+                @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button class="btn btn-sm btn-primary text-light" data-bs-dismiss="modal"><i class="bi bi-house"></i> OK </button>
+                <button wire:click="clearErrorBag" class="btn btn-sm btn-primary text-light" data-bs-dismiss="modal"><i class="bi bi-house"></i> OK </button>
             </div>
         </div>
         </div>

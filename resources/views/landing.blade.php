@@ -25,7 +25,7 @@
     <body  style="background-color: #4cc8fb">
       <nav id="navbar-example2" class="navbar navbar-dark px-3 mb-3 fixed-top " >
         <a class="navbar-brand" href="/">
-          <img src="{{url('/assets/alumni_uho.png')}}" alt="AlumniUHO" class="d-inline-block align-text-top">
+          <img src="{{url('/app-logo')}}" style="height: 40px" alt="{{$setting->instansi}}" class="d-inline-block align-text-top">
         </a>
         <ul class="nav nav-pills">
           <li class="nav-item">
@@ -97,7 +97,7 @@
                 
             </main>  --}}
             <footer class="mt-auto text-white-50 text-center p-4" style="background-color: #4cc8fb; text-shadow: 1px 1px #707070;">
-                <span>Copyright © STIKES PELITA IBU KENDARI. All right reserved.</span>
+                <span>Copyright © {{$setting->instansi}}. All right reserved.</span>
                 <button type="button" class="btn btn-success btn-floating btn-md" id="btn-back-to-top">
                   <i class="bi bi-arrow-up"></i>
                 </button>

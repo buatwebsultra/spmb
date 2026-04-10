@@ -135,6 +135,15 @@
                     </div>
                     @if(auth()->user()->jurusan_id == 0)
                     <div class="input-group mb-2 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1l" style="width: 10rem">Level Akses</span>
+                        <select wire:model="level_id" class="form-select {{!$level_id ? 'is-invalid' : 'is-valid'}}">
+                            <option value="">--Pilih Level--</option>
+                            @foreach ($pillevel as $val)
+                                <option value="{{$val->id}}">{{$val->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-group mb-2 input-group-sm">
                         <span class="input-group-text" id="basic-addon1j" style="width: 10rem">Khusus Jurusan</span>
                         <select wire:model="jurusan_id" class="form-select">
                             <option value="">--Semua Jurusan--</option>

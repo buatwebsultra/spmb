@@ -29,7 +29,7 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm sticky-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{url('/assets/alumni_uho.png')}}" alt="StikesPIK">
+                    <img src="{{url('/app-logo')}}" style="max-height: 40px" alt="{{$setting_app->instansi ?? 'StikesPIK'}}">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

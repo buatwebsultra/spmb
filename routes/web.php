@@ -19,7 +19,7 @@ Auth::routes(['verify' => true]);
 Route::get('/qr/{no}', [App\Http\Controllers\HomeController::class, 'qrcodeUrl']);
 Route::get('/images/{filename}', [App\Http\Controllers\ImageController::class, 'image']);
 Route::get('/bghead', [App\Http\Controllers\ImageController::class, 'bghead']);
-Route::get('/logo', [App\Http\Controllers\ImageController::class, 'logo']);
+Route::get('/app-logo', [App\Http\Controllers\ImageController::class, 'logo']);
 Route::get('/pdf-pengumuman/{id}', [App\Http\Controllers\PrintController::class, 'getPdfPengumuman']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
