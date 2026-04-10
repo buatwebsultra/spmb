@@ -105,7 +105,10 @@ class ImageController extends Controller
             public_path('images/lunas.png')
         ];
         foreach ($paths as $path) {
-            if (File::exists($path)) return response()->file($path);
+            if (File::exists($path)) {
+                $img = Image::make($path);
+                return $img->response('png');
+            }
         }
         abort(404);
     }
@@ -115,7 +118,10 @@ class ImageController extends Controller
             public_path('images/unpaid.png')
         ];
         foreach ($paths as $path) {
-            if (File::exists($path)) return response()->file($path);
+            if (File::exists($path)) {
+                $img = Image::make($path);
+                return $img->response('png');
+            }
         }
         abort(404);
     }

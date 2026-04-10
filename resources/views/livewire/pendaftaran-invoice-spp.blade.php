@@ -1,5 +1,6 @@
 <div class="container container-fluid" style="overflow-x: auto">
-    <div class="d-print-grid border p-3 shadow" style="width: 210mm; background-image: url({{$data['bgspp']}}); background-repeat: no-repeat; background-size: contain; background-position: center;">
+    <div class="d-print-grid border p-3 shadow position-relative" style="width: 210mm;">
+        <img src="{{$data['bgspp']}}" class="position-absolute top-50 start-50 translate-middle" style="width: 70%; opacity: 0.15; pointer-events: none; z-index: 0;" alt="watermark">
 
         <div class="row border-bottom d-flex align-items-center pb-2 mb-2">
             <div class="col-2">
