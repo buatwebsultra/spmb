@@ -16,7 +16,7 @@
         <div class="col">
             <h6 class="text-center mt-2"><strong>{{$title1}}</strong></h6>
             <div class="p-2 bg-white " style="height: 36rem;" >
-                <livewire:livewire-column-chart :column-chart-model="$columnChartModel"/>
+                <livewire:livewire-column-chart key="{{ 'chart-pendaftar-'.$tahun }}" :column-chart-model="$columnChartModel"/>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
             <h6 class="text-center  mt-2"><strong>{{$title2}}</strong></h6>
             <div class="p-2 bg-white" style="height: 36rem;">
                 
-                <livewire:livewire-column-chart :column-chart-model="$columnChartModel2"/>
+                <livewire:livewire-column-chart key="{{ 'chart-daftarulang-'.$tahun }}" :column-chart-model="$columnChartModel2"/>
             </div>
         </div>
     </div>
