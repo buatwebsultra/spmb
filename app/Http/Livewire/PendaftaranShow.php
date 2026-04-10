@@ -28,8 +28,8 @@ class PendaftaranShow extends Component
             $data['daftar_ulang_awal'] = $setting->daftar_ulang_awal;
             $data['daftar_ulang_akhir'] = $setting->daftar_ulang_akhir;
             $data['qrcode'] = url('/qr/'.$data['no_daftar']);
-            $data['bgdaftar'] = $this->cekLunasDaftar($this->idp) ? url('/bglunas') : url('bgunpaid');
-            $data['bgspp'] = $this->cekLunasSpp($this->idp) ? url('/bglunas') : url('bgunpaid');
+            $data['bgdaftar'] = $this->cekLunasDaftar($this->idp) ? url('/bglunas') : url('/bgunpaid');
+            $data['bgspp'] = $this->cekLunasSpp($this->idp) ? url('/bglunas') : url('/bgunpaid');
     
             $akun = collect($this->getAkun($this->idp))->all();
             $this->data  = $data;

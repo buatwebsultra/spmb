@@ -20,6 +20,11 @@ class ImageController extends Controller
     }
 
     public function photo($image){
+        $image = basename($image);
+        if (!$this->checkPermission($image)) {
+            abort(403, 'Unauthorized access to student photo.');
+        }
+
         $paths = [
             storage_path('app/photo/'.$image),
             public_path('app/photo/'.$image),
@@ -31,6 +36,11 @@ class ImageController extends Controller
         abort(404);
     }
     public function ijazah($image){
+        $image = basename($image);
+        if (!$this->checkPermission($image)) {
+            abort(403, 'Unauthorized access to student ijazah.');
+        }
+
         $paths = [
             storage_path('app/ijazah/'.$image),
             public_path('app/ijazah/'.$image),
@@ -42,6 +52,11 @@ class ImageController extends Controller
         abort(404);
     }
     public function transkip($image){
+        $image = basename($image);
+        if (!$this->checkPermission($image)) {
+            abort(403, 'Unauthorized access to student transkip.');
+        }
+
         $paths = [
             storage_path('app/transkip/'.$image),
             public_path('app/transkip/'.$image),
@@ -53,6 +68,11 @@ class ImageController extends Controller
         abort(404);
     }
     public function ortuTtd($image){
+        $image = basename($image);
+        if (!$this->checkPermission($image)) {
+            abort(403, 'Unauthorized access to signature file.');
+        }
+
         $paths = [
             storage_path('app/ortu_ttd/'.$image),
             public_path('app/ortu_ttd/'.$image),
@@ -64,6 +84,11 @@ class ImageController extends Controller
         abort(404);
     }
     public function mabaTtd($image){
+        $image = basename($image);
+        if (!$this->checkPermission($image)) {
+            abort(403, 'Unauthorized access to signature file.');
+        }
+
         $paths = [
             storage_path('app/ttd/'.$image),
             public_path('app/ttd/'.$image),
@@ -75,18 +100,24 @@ class ImageController extends Controller
         abort(404);
     }
     public function bglunas(){
-        $path = storage_path('app/lunas.png');
-        if (!file_exists($path)) $path = public_path('images/lunas.png');
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('png');
+        $paths = [
+            storage_path('app/lunas.png'),
+            public_path('images/lunas.png')
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
     public function bgunpaid(){
-        $path = storage_path('app/unpaid.png');
-        if (!file_exists($path)) $path = public_path('images/unpaid.png');
-        if (!file_exists($path)) abort(404);
-        $img =  Image::make($path);
-        return $img->response('png');
+        $paths = [
+            storage_path('app/unpaid.png'),
+            public_path('images/unpaid.png')
+        ];
+        foreach ($paths as $path) {
+            if (File::exists($path)) return response()->file($path);
+        }
+        abort(404);
     }
     public function bghead(){
         $set = DB::table('d_setting')->first();
@@ -144,5 +175,25 @@ class ImageController extends Controller
             // echo $response;
             return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
         }
+    private function checkPermission($image)
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+        if ($user->level_id == 1) { // Admin
+            return true;
+        }
+
+        if ($user->pendaftaran_id) {
+            $pendaftaran = DB::table('d_pendaftaran')->where('id', $user->pendaftaran_id)->first();
+            // Check if the filename starts with the user's no_daftar
+            if ($pendaftaran && strpos($image, $pendaftaran->no_daftar) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
