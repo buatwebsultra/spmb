@@ -175,6 +175,8 @@ class ImageController extends Controller
             // echo $response;
             return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
         }
+    }
+
     private function checkPermission($image)
     {
         if (!auth()->check()) {
