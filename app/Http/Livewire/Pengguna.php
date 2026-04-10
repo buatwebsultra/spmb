@@ -60,6 +60,11 @@ class Pengguna extends Component
                          ->where('p.jurusan_id', auth()->user()->jurusan_id);
         }
 
+        // Hide Super Admin from other admins
+        if (auth()->user()->email != 'admin@email.com') {
+            $data = $data->where('u.email', '!=', 'admin@email.com');
+        }
+
         if($cari!=''){
             $data = $data->where(function($q)use($cari){
                 $q->orWhere('p.nama_depan', 'like', '%'.$cari.'%');
