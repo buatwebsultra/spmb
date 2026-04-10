@@ -170,26 +170,37 @@ class PendaftaranUpload extends Component
         if($this->photo){
             $this->validateOnly('photo');
             $no_daftar = $this->data ? $this->data['no_daftar'] : '';
-            // $uuid = Str::uuid()->toString();
             $ext = $this->photo->guessExtension();
             $filename = $no_daftar.'.'.$ext;
-            $this->photo->storeAs('photo', $filename);
+            
+            $dir = storage_path('app/photo');
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+
+            $this->photo->storeAs('photo', $filename, 'local');
             DB::table('d_pendaftaran')->where('id', $this->idp)->update(['photo_image'=>$filename]);
+            $this->photo = null;
             $this->clearErrorBag();
             $this->message = 'Sukses upload Photo';
             $this->emit('showMessage', $this->message);
         }
-        
     }
     public function uploadI(){
         if($this->ijazah){
             $this->validateOnly('ijazah');
             $no_daftar = $this->data ? $this->data['no_daftar'] : '';
-            // $uuid = Str::uuid()->toString();
             $ext = $this->ijazah->guessExtension();
             $filename = $no_daftar.'.'.$ext;
-            $this->ijazah->storeAs('ijazah', $filename);
+
+            $dir = storage_path('app/ijazah');
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+
+            $this->ijazah->storeAs('ijazah', $filename, 'local');
             DB::table('d_pendaftaran')->where('id', $this->idp)->update(['ijazah_image'=>$filename]);
+            $this->ijazah = null;
             $this->clearErrorBag();
             $this->message = 'Sukses upload Ijazah';
             $this->emit('showMessage', 'Sukses upload Ijazah');
@@ -199,11 +210,17 @@ class PendaftaranUpload extends Component
         if($this->transkip){
             $this->validateOnly('transkip');
             $no_daftar = $this->data ? $this->data['no_daftar'] : '';
-            // $uuid = Str::uuid()->toString();
             $ext = $this->transkip->guessExtension();
             $filename = $no_daftar.'.'.$ext;
-            $this->transkip->storeAs('transkip', $filename);
+
+            $dir = storage_path('app/transkip');
+            if (!File::isDirectory($dir)) {
+                File::makeDirectory($dir, 0755, true, true);
+            }
+
+            $this->transkip->storeAs('transkip', $filename, 'local');
             DB::table('d_pendaftaran')->where('id', $this->idp)->update(['transkip_image'=>$filename]);
+            $this->transkip = null;
             $this->clearErrorBag();
             $this->message = 'Sukses upload Transkip';
             $this->emit('showMessage', 'Sukses upload Transkip');

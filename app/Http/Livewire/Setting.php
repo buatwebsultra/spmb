@@ -103,14 +103,26 @@ class Setting extends Component
             $ext = $this->photo->guessExtension();
             $uuid = Str::uuid()->toString();
             $filename = $uuid.'.'.$ext;
-            $this->photo->storeAs('bghead', $filename);
+            
+            $dir = storage_path('app/bghead');
+            if (!\Illuminate\Support\Facades\File::isDirectory($dir)) {
+                \Illuminate\Support\Facades\File::makeDirectory($dir, 0755, true, true);
+            }
+
+            $this->photo->storeAs('bghead', $filename, 'local');
             DB::table('d_setting')->update(['bg_head'=>$filename]);
         }
         if($this->logo){
             $ext = $this->logo->guessExtension();
             $uuid = Str::uuid()->toString();
             $filename = $uuid.'.'.$ext;
-            $this->logo->storeAs('logo', $filename);
+
+            $dir = storage_path('app/logo');
+            if (!\Illuminate\Support\Facades\File::isDirectory($dir)) {
+                \Illuminate\Support\Facades\File::makeDirectory($dir, 0755, true, true);
+            }
+
+            $this->logo->storeAs('logo', $filename, 'local');
             DB::table('d_setting')->update(['logo_app'=>$filename]);
         }
         session()->flash('message', 'Sukses update data pengaturan');
