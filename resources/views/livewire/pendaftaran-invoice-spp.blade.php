@@ -1,5 +1,5 @@
 <div class="container container-fluid" style="overflow-x: auto">
-    <div class="d-print-grid border p-3 shadow" style="width: 210mm; background-image: url({{$data['bgspp']}}); background-repeat: no-repeat; background-size: container; background-position: center;">
+    <div class="d-print-grid border p-3 shadow" style="width: 210mm; background-image: url({{$data['bgspp']}}); background-repeat: no-repeat; background-size: contain; background-position: center;">
 
         <div class="row border-bottom d-flex align-items-center pb-2 mb-2">
             <div class="col-2">
