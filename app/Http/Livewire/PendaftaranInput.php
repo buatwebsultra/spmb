@@ -109,7 +109,7 @@ class PendaftaranInput extends Component
         ]);
     }
     public function updatedNisn(){
-        if(!$this->idp>0){
+        if(empty($this->idp)){
             $data = DB::table('d_pendaftaran')->where('nisn', '=', $this->nisn)->first();
             $this->nisn_exists = false;// $data ? true : false;
         }
@@ -199,7 +199,7 @@ class PendaftaranInput extends Component
         $this->emit('updatedStep', 2);
     }
     public function step1Valid(){
-        return ($this->nama_depan && $this->nisn & $this->jenis_kelamin && $this->tempat_lahir
+        return ($this->nama_depan && $this->nisn && $this->jenis_kelamin && $this->tempat_lahir
              && $this->tanggal_lahir && $this->agama_id && $this->hp && $this->email && (!$this->nisn_exists));
     }
     public function step2Valid(){
