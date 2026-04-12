@@ -100,12 +100,12 @@ class PendaftaranInput extends Component
     public function updatedPhoto()
     {
         $this->validate([
-            'photo' => 'image|max:500',
+            'photo' => 'image|max:1024',
         ]);
     }
     public function updatedIjazah(){
         $this->validate([
-            'ijazah' => 'file|mimes:pdf|max:500',
+            'ijazah' => 'file|mimes:pdf|max:1024',
         ]);
     }
     public function updatedNisn(){

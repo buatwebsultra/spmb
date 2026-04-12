@@ -19,7 +19,7 @@ class Pendaftaran extends Component
     public $waktu_awal, $waktu_akhir;
     public $provinsi_id, $kabkota_id;
     public $jurusan_id;
-    public $perpage = 5;
+    public $perpage = 10;
     public $idd;
     public $provinsi, $kabkota, $jurusan;
     public $filter_upload;
@@ -107,7 +107,7 @@ class Pendaftaran extends Component
         if($this->filter_jenis_daftar!=''){
             $data = $data->where('i.jenis_daftar', '=', $this->filter_jenis_daftar);
         }
-        $data = $data->orderBy('i.id', 'desc');
+        $data = $data->orderBy('i.waktu', 'desc');
         
         return $data;
     }
@@ -167,8 +167,19 @@ class Pendaftaran extends Component
         return redirect()->route('pendaftaran.show', ['idp'=>$id]);
     }
     public $show_image;
-    public function showImage($url){
+    public $show_type = 'image';
+    public $modal_title = 'Preview Berkas';
+    public function showImage($url, $title = 'Preview Berkas'){
         $this->show_image = $url;
+        $this->modal_title = $title;
+        
+        // Detect if PDF
+        if (str_ends_with(strtolower($url), '.pdf')) {
+            $this->show_type = 'pdf';
+        } else {
+            $this->show_type = 'image';
+        }
+        
         $this->emit('showImage');
     }
     public $namafile;

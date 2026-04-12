@@ -27,7 +27,11 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if (app()->environment('local')) {
+            Event::listen(Registered::class, function ($event) {
+                $event->user->markEmailAsVerified();
+            });
+        }
     }
 
     /**

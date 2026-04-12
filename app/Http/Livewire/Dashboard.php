@@ -11,6 +11,14 @@ class Dashboard extends Component
     public $tahun;
     public $tahunList = [];
 
+    public $stats = [
+        'total' => 0,
+        'paid' => 0,
+        'complete' => 0,
+        'verified' => 0
+    ];
+    public $recentActivity = [];
+
     public function mount()
     {
         $this->tahun = \Carbon\Carbon::now()->format('Y');
@@ -31,6 +39,9 @@ class Dashboard extends Component
 
     public function render()
     {
+        $this->calculateStats();
+        $this->fetchRecentActivity();
+
         $prodi = DB::table('m_jurusan');
         if (auth()->user()->jurusan_id > 0) {
             $prodi = $prodi->where('id', auth()->user()->jurusan_id);
@@ -68,12 +79,54 @@ class Dashboard extends Component
             $columnChartModel2->addColumn($value->nama, $daftarUlangQuery->count(), $this->getColor($value->id));
         }
 
-        return view('livewire.dashboard', ['columnChartModel' => $columnChartModel, 'columnChartModel2' => $columnChartModel2,
-             'title1'=>'Pendaftar Berdasarkan Prodi',
-             'title2'=>'Daftar Ulang Berdasarkan Prodi'])
+        return view('livewire.dashboard', [
+            'columnChartModel' => $columnChartModel, 
+            'columnChartModel2' => $columnChartModel2,
+            'title1'=>'Pendaftar Berdasarkan Prodi',
+            'title2'=>'Daftar Ulang Berdasarkan Prodi'
+        ])
         ->extends('layouts.app')
         ->section('content');
     }
+
+    private function calculateStats()
+    {
+        $baseQuery = DB::table('d_pendaftaran');
+        
+        if (auth()->user()->jurusan_id > 0) {
+            $baseQuery->where('jurusan_id', auth()->user()->jurusan_id);
+        }
+
+        if ($this->tahun && $this->tahun != 'Semua') {
+            $baseQuery->whereYear('waktu', $this->tahun);
+        }
+
+        $this->stats['total'] = (clone $baseQuery)->count();
+        $this->stats['paid'] = (clone $baseQuery)->where('status_bayar', '>', 0)->count();
+        $this->stats['complete'] = (clone $baseQuery)
+            ->whereNotNull('photo_image')
+            ->where('photo_image', '!=', '')
+            ->whereNotNull('ijazah_image')
+            ->where('ijazah_image', '!=', '')
+            ->count();
+        $this->stats['verified'] = (clone $baseQuery)->where('status_lulus', 1)->count();
+    }
+
+    private function fetchRecentActivity()
+    {
+        $query = DB::table('d_pendaftaran as p')
+            ->leftJoin('m_jurusan as j', 'j.id', '=', 'p.jurusan_id')
+            ->select('p.id', 'p.no_daftar', 'p.nama_depan', 'p.nama_belakang', 'p.waktu', 'j.nama as prodi', 'p.status_bayar')
+            ->orderBy('p.waktu', 'desc')
+            ->limit(5);
+
+        if (auth()->user()->jurusan_id > 0) {
+            $query->where('p.jurusan_id', auth()->user()->jurusan_id);
+        }
+
+        $this->recentActivity = $query->get();
+    }
+
     private function getColor($id){
         return (DB::table('m_jurusan')->where('id', '=', $id)->first())->color;
     }

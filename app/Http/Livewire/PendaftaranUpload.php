@@ -26,14 +26,14 @@ class PendaftaranUpload extends Component
     public $isttdortu = true;
 
     protected $rules = [
-        'photo' => 'image|max:500',
-        'ijazah' => 'image|max:500',
-        'transkip' => 'image|max:500',
+        'photo' => 'image|max:1024',
+        'ijazah' => 'image|max:1024',
+        'transkip' => 'image|max:1024',
     ];
     protected $messages = [
-        'photo.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
-        'ijazah.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
-        'transkip.max' => 'UKURAN PHOTO tidak boleh lebih dari 500KB',
+        'photo.max' => 'UKURAN PHOTO tidak boleh lebih dari 1MB',
+        'ijazah.max' => 'UKURAN PHOTO tidak boleh lebih dari 1MB',
+        'transkip.max' => 'UKURAN PHOTO tidak boleh lebih dari 1MB',
     ];
 
     protected $listeners = ['hapusPhoto' => 'hapusPhoto', 'hapusIjazah' => 'hapusIjazah', 'hapusTranskip' => 'hapusTranskip', 
@@ -137,7 +137,7 @@ class PendaftaranUpload extends Component
     {
         try {
             $this->validate([
-                'photo' => 'image|max:500',
+                'photo' => 'image|max:1024',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->photo = null;
@@ -148,7 +148,7 @@ class PendaftaranUpload extends Component
     {
         try {
             $this->validate([
-                'ijazah' => 'image|max:500',
+                'ijazah' => 'image|max:1024',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->ijazah = null;
@@ -159,7 +159,7 @@ class PendaftaranUpload extends Component
     {
         try {
             $this->validate([
-                'transkip' => 'image|max:500',
+                'transkip' => 'image|max:1024',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->transkip = null;

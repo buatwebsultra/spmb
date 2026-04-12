@@ -4,6 +4,80 @@
             {{ session('message') }}
         </div>
       @endif
+    @if($data)
+    <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="d-flex justify-content-between p-3 bg-light align-items-center border-bottom">
+                <h6 class="mb-0 fw-bold text-secondary"><i class="bi bi-clock-history me-2"></i> Status Pendaftaran</h6>
+                <span class="badge bg-primary rounded-pill px-3">{{$data['no_daftar']}}</span>
+            </div>
+            <div class="p-4">
+                <style>
+                    .status-item { transition: all 0.3s ease; border: 1px solid transparent; }
+                    .status-item:hover { transform: translateY(-5px); }
+                    .status-active { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+                </style>
+                <div class="row g-3 text-center">
+                    {{-- Step 1: Terdaftar --}}
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center status-active" 
+                             style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                            <i class="bi bi-person-plus-fill fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Terdaftar</span>
+                        </div>
+                    </div>
+
+                    {{-- Step 2: Berkas --}}
+                    @php $isUpload = ($data['photo_image'] && $data['ijazah_image'] && $data['transkip_image']); @endphp
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center {{ $isUpload ? 'status-active' : '' }}" 
+                             style="{{ $isUpload ? 'background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white;' : 'background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1;' }}">
+                            <i class="bi {{ $isUpload ? 'bi-cloud-check-fill' : 'bi-cloud-arrow-up' }} fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Berkas</span>
+                        </div>
+                    </div>
+
+                    {{-- Step 3: Bayar --}}
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center {{ $data['status_bayar'] > 0 ? 'status-active' : '' }}" 
+                             style="{{ $data['status_bayar'] > 0 ? 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;' : 'background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1;' }}">
+                            <i class="bi {{ $data['status_bayar'] > 0 ? 'bi-wallet2' : 'bi-credit-card' }} fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Bayar (Pendaftaran)</span>
+                        </div>
+                    </div>
+
+                    {{-- Step 4: Verifikasi --}}
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center {{ $data['status_jadwal'] > 0 ? 'status-active' : '' }}" 
+                             style="{{ $data['status_jadwal'] > 0 ? 'background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white;' : 'background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1;' }}">
+                            <i class="bi {{ $data['status_jadwal'] > 0 ? 'bi-shield-fill-check' : 'bi-shield-lock' }} fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Verifikasi</span>
+                        </div>
+                    </div>
+
+                    {{-- Step 5: Hasil --}}
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center {{ $data['status_lulus'] != null ? 'status-active' : '' }}" 
+                             style="{{ $data['status_lulus'] != null ? 'background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: white;' : 'background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1;' }}">
+                            <i class="bi {{ $data['status_lulus'] != null ? 'bi-megaphone-fill' : 'bi-megaphone' }} fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Hasil</span>
+                        </div>
+                    </div>
+
+                    {{-- Step 6: Daftar Ulang --}}
+                    <div class="col-md-2 col-6">
+                        <div class="status-item p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center {{ $data['status_daftar_ulang'] > 0 ? 'status-active' : '' }}" 
+                             style="{{ $data['status_daftar_ulang'] > 0 ? 'background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white;' : 'background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1;' }}">
+                            <i class="bi {{ $data['status_daftar_ulang'] > 0 ? 'bi-patch-check-fill' : 'bi-patch-check' }} fs-3 mb-2"></i>
+                            <span style="font-size: 0.8rem;" class="fw-bold text-uppercase">Daftar Ulang</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="accordion mb-3 shadow" id="accordionPanelsStayOpenExample">
       <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingFour">
@@ -26,12 +100,10 @@
           <div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
               <div class="d-flex flex-fill">
                   <span class="flex-fill  align-self-center"><strong>Form Pendaftaran</strong></span>
-                  {{-- @if($data['status_spp']==null) --}}
-                  {{-- @if($data['status_bayar']==null) --}}
-                  
+                  @if($data['status_bayar']==null)
                   <h5 wire:click="edit" class="mb-0 me-1 btn btn-sm btn-outline-success"><i class="bi bi-pencil"></i> Edit</h5>
                   <h5 wire:click="upload" class="mb-0 me-1 btn btn-sm btn-outline-success"><i class="bi bi-upload"></i> Upload</h5>
-                  {{-- @endif --}}
+                  @endif
                   {{-- <h5 wire:click="cetak" class="mb-0 me-3 btn btn-sm btn-outline-success">
                     <div wire:loading wire:target="cetak" class="spinner-border spinner-border-sm" role="status">
                       <span class="visually-hidden">Loading...</span>

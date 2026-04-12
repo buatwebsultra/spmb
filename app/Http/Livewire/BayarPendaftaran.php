@@ -27,6 +27,14 @@ class BayarPendaftaran extends Component
     
 
     protected $listeners = ['hapusBayar' => 'hapusBayar'];
+    public function updatingQuery(){
+        $this->resetPage();
+    }
+    public function updatedNoDaftar(){
+        if(strlen($this->no_daftar) >= 3){
+            $this->tambah();
+        }
+    }
     public function mount(){
         $this->waktu_bayar = \Carbon\Carbon::now()->format('Y-m-d H:i:s');
     }
@@ -55,10 +63,11 @@ class BayarPendaftaran extends Component
         ->select('i.*', 'j.nama as jurusan', 'bp.jumlah', 'bp.waktu as waktu_bayar', 'bp.id as idb');
         
 
-        if($cari!=''){
+        if(strlen($cari) >= 3){
             $data = $data->where(function($q)use($cari){
                 $q->orWhere('i.nama_depan', 'like', '%'.$cari.'%');
                 $q->orWhere('i.no_daftar', 'like', '%'.$cari.'%');
+                $q->orWhere('i.nama_belakang', 'like', '%'.$cari.'%');
             });
         }
         if (auth()->user()->jurusan_id > 0) {

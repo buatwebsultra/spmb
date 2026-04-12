@@ -140,45 +140,52 @@
                         <td><small>{{$val->kabkota}}</small></td>
                         <td><small class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{$val->email}}">{{$val->user?$val->user:'-'}}</small></td>
                         <td class="text-center">
-                            <div class="row">
-                                <div class="col-4 p-1 border rounded">
-                                    @if($val->photo_image)
-                                        <img wire:click="showImage('{{url('/photo/'.$val->photo_image)}}')" src="{{url('/photo/'.$val->photo_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->photo_image}}">
-                                    @else
-                                    <span class="text-danger small">Belum Upload</span>
-                                    @endif
-                                </div>
-                                <div class="col-4 p-1 border rounded">
-                                    @if($val->ijazah_image)
-                                        <img wire:click="showImage('{{url('/ijazah/'.$val->ijazah_image)}}')" src="{{url('/ijazah/'.$val->ijazah_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->ijazah_image}}">
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="p-1 border rounded bg-white shadow-sm h-100 d-flex flex-column align-items-center justify-content-center cursor-pointer" 
+                                         wire:click="showImage('{{url('/photo/'.$val->photo_image)}}', 'Foto - {{$val->nama_depan}}')">
+                                        @if($val->photo_image)
+                                            <img src="{{url('/photo/'.$val->photo_image)}}" style="max-height: 60px; width: auto;" class="img-fluid rounded" alt="Foto">
+                                            <span class="very-small text-muted mt-1 uppercase">Foto</span>
                                         @else
-                                        <span class="text-danger small">Belum Upload</span>
-                                    @endif
+                                            <i class="bi bi-x-circle text-danger fs-4"></i>
+                                            <span class="very-small text-danger mt-1">Kosong</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="col-4 p-1 border rounded">
-                                    @if($val->transkip_image)
-                                        <img wire:click="showImage('{{url('/transkip/'.$val->transkip_image)}}')" src="{{url('/transkip/'.$val->transkip_image)}}" style="height: 80px !important;" class="img-thumbnail border-0" alt="{{$val->transkip_image}}">
+                                <div class="col-4">
+                                    <div class="p-1 border rounded bg-white shadow-sm h-100 d-flex flex-column align-items-center justify-content-center cursor-pointer" 
+                                         wire:click="showImage('{{url('/ijazah/'.$val->ijazah_image)}}', 'Ijazah - {{$val->nama_depan}}')">
+                                        @if($val->ijazah_image)
+                                            @if(str_ends_with(strtolower($val->ijazah_image), '.pdf'))
+                                                <i class="bi bi-file-earmark-pdf-fill text-danger fs-2"></i>
+                                            @else
+                                                <img src="{{url('/ijazah/'.$val->ijazah_image)}}" style="max-height: 60px; width: auto;" class="img-fluid rounded" alt="Ijazah">
+                                            @endif
+                                            <span class="very-small text-muted mt-1 uppercase">Ijazah</span>
                                         @else
-                                        <span class="text-danger small">Belum Upload</span>
-                                    @endif
+                                            <i class="bi bi-x-circle text-danger fs-4"></i>
+                                            <span class="very-small text-danger mt-1">Kosong</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-1 border rounded bg-white shadow-sm h-100 d-flex flex-column align-items-center justify-content-center cursor-pointer" 
+                                         wire:click="showImage('{{url('/transkip/'.$val->transkip_image)}}', 'Transkrip - {{$val->nama_depan}}')">
+                                        @if($val->transkip_image)
+                                            @if(str_ends_with(strtolower($val->transkip_image), '.pdf'))
+                                                <i class="bi bi-file-earmark-pdf-fill text-danger fs-2"></i>
+                                            @else
+                                                <img src="{{url('/transkip/'.$val->transkip_image)}}" style="max-height: 60px; width: auto;" class="img-fluid rounded" alt="Transkrip">
+                                            @endif
+                                            <span class="very-small text-muted mt-1 uppercase">Transkrip</span>
+                                        @else
+                                            <i class="bi bi-x-circle text-danger fs-4"></i>
+                                            <span class="very-small text-danger mt-1">Kosong</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                            {{-- <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                                <button type="button" class="btn btn-outline-dark" @if(!$val->photo_image) disabled @endif>
-                                    @if($val->photo_image)
-                                    <i class="bi bi-file-image"></i>
-                                    @else
-                                    <i class="bi bi-x"></i>
-                                    @endif
-                                </button>
-                                <button type="button" class="btn btn-outline-dark" @if(!$val->ijazah_image) disabled @endif>
-                                    @if($val->ijazah_image)
-                                    <i class="bi bi-file-image"></i>
-                                    @else
-                                    <i class="bi bi-x"></i>
-                                    @endif
-                                </button>
-                            </div> --}}
                         </td>
                         
                         <td class="text-end">
@@ -198,19 +205,49 @@
         </div>
     </div>
 
-    <!-- Full screen modal -->
-    <div class="modal fade" id="exampleModalImage" tabindex="-1" aria-labelledby="exampleModalImageLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-light">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Image Upload</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Enhanced Document Preview Modal -->
+    <div class="modal fade" id="exampleModalImage" tabindex="-1" aria-labelledby="exampleModalImageLabel" aria-hidden="true" style="backdrop-filter: blur(5px);">
+        <div class="modal-dialog {{ $show_type == 'pdf' ? 'modal-fullscreen' : 'modal-xl modal-dialog-centered' }} transition-all">
+            <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="modal-header bg-white border-bottom-0 py-3 px-4 d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                            @if($show_type == 'pdf')
+                                <i class="bi bi-file-earmark-pdf text-primary fs-4"></i>
+                            @else
+                                <i class="bi bi-image text-primary fs-4"></i>
+                            @endif
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0 text-dark" id="exampleModalLabel text-truncate" style="max-width: 300px;">{{ $modal_title }}</h5>
+                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.65rem; letter-spacing: 1px;">Dokumen Pendaftaran</small>
+                        </div>
+                    </div>
+                    <div class="ms-auto d-flex align-items-center">
+                        @if($show_image)
+                        <a href="{{ $show_image }}" download class="btn btn-light btn-sm me-2 rounded-pill px-3 fw-bold border text-secondary shadow-sm">
+                            <i class="bi bi-download me-1"></i> Unduh
+                        </a>
+                        @endif
+                        <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-0 bg-light bg-opacity-50" style="min-height: 400px;">
                     @if($show_image)
-                    <img src="{{$show_image}}" class="img-fluid" alt="show_image">
+                        @if($show_type == 'pdf')
+                            <iframe src="{{$show_image}}" style="width: 100%; height: calc(100vh - 75px); border: none;"></iframe>
+                        @else
+                            <div class="text-center p-4 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-10">
+                                <img src="{{$show_image}}" class="img-fluid rounded-3 shadow-lg" style="max-height: 80vh; border: 4px solid white;" alt="show_image">
+                            </div>
+                        @endif
                     @endif
                 </div>
+                @if($show_type != 'pdf')
+                <div class="modal-footer border-top-0 bg-white py-3 justify-content-center">
+                    <button type="button" class="btn btn-secondary rounded-pill px-5 fw-bold shadow-sm" data-bs-dismiss="modal">Tutup Preview</button>
+                </div>
+                @endif
             </div>
         </div>
     </div>

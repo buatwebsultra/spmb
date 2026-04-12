@@ -10,7 +10,7 @@
         <h5 class="card-header bg-primary text-light">Data Pembayaran Pendaftaran
             <span class="float-end">
                 <div class="input-group input-group-sm mb-0">
-                    <input  wire:model="no_daftar" type="text" class="form-control" placeholder="Nomor pendaftaran" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm-nd">
+                    <input  wire:model.debounce.500ms="no_daftar" type="text" class="form-control" placeholder="Nomor pendaftaran" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm-nd">
                     <button {{$no_daftar!='' ?'':'disabled'}} type="button" class="btn btn-sm btn-outline-light ml-2 " @if($no_daftar!='') data-bs-toggle="modal" data-bs-target="#staticBackdrop" @endif wire:click="tambah" ><i class="bi bi-cart-plus"></i> Tambah</button>
                     @if($inputnamafile==null)
                     <button @if(count($data)<=0) disabled @endif wire:click="toexport" class="btn btn-sm btn-warning"><i class="bi bi-table"></i> Export Data</button>
@@ -39,7 +39,7 @@
                         @if ($query!='')
                         <button wire:click="$set('query', '')" class="btn btn-outline-danger" type="button" id="button-addon2x"><i class="bi bi-x"></i></button>
                         @endif
-                        <input style="min-width: 40%" wire:model="query" type="text" class="form-control" placeholder="Cari nama, nomor daftar..." aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm1">
+                        <input style="min-width: 40%" wire:model.debounce.500ms="query" type="text" class="form-control" placeholder="Cari nama, nomor daftar..." aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm1">
                         <select wire:model="filjurusan" id="filjurusan"  class="form-select form-select-sm " style="max-width: 150px">
                             <option value="">--Filter Jurusan--</option>
                             @foreach ($listjurusan as $val)
