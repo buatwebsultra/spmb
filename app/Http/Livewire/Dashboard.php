@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\Jurusan;
 
 class Dashboard extends Component
 {
@@ -42,7 +43,7 @@ class Dashboard extends Component
         $this->calculateStats();
         $this->fetchRecentActivity();
 
-        $prodi = DB::table('m_jurusan');
+        $prodi = Jurusan::query();
         if (auth()->user()->jurusan_id > 0) {
             $prodi = $prodi->where('id', auth()->user()->jurusan_id);
         }
@@ -128,7 +129,8 @@ class Dashboard extends Component
     }
 
     private function getColor($id){
-        return (DB::table('m_jurusan')->where('id', '=', $id)->first())->color;
+        $jur = Jurusan::find($id);
+        return $jur ? $jur->color : '#000000';
     }
     private function randColor(){
         $rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');

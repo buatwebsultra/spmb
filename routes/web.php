@@ -67,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/jadwal', [App\Http\Controllers\PrintController::class, 'printJadwal']);
         Route::get('/hasil', [App\Http\Controllers\PrintController::class, 'printHasil']);
     });
+    Route::post('/image-upload', [App\Http\Controllers\ImageController::class, 'upload'])->name('image.upload');
 });
 Route::get('/photo/{filename}', [App\Http\Controllers\ImageController::class, 'photo']);
 Route::get('/ijazah/{filename}', [App\Http\Controllers\ImageController::class, 'ijazah']);
@@ -76,5 +77,3 @@ Route::get('/ortuttd/{filename}', [App\Http\Controllers\ImageController::class, 
 Route::get('/ttd/{filename}', [App\Http\Controllers\ImageController::class, 'mabaTtd']);
 
 Route::get('/info/{id}', App\Http\Livewire\ShowInfo::class)->name('info.show');
-
-Route::post('/image-upload', [App\Http\Controllers\ImageController::class, 'upload'])->name('image.upload');
