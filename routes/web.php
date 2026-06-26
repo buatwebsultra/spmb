@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\LandingController::class, 'landing']);
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => false, 'reset' => false]);
 Route::get('/qr/{no}', [App\Http\Controllers\HomeController::class, 'qrcodeUrl']);
 Route::get('/images/{filename}', [App\Http\Controllers\ImageController::class, 'image']);
 Route::get('/bghead', [App\Http\Controllers\ImageController::class, 'bghead']);
 Route::get('/app-logo', [App\Http\Controllers\ImageController::class, 'logo']);
 Route::get('/pdf-pengumuman/{id}', [App\Http\Controllers\PrintController::class, 'getPdfPengumuman']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/home', App\Http\Livewire\Dashboard::class)->name('home');
     Route::group(['prefix'=>'pendaftaran'], function(){
         Route::get('/', App\Http\Livewire\Pendaftaran::class)->name('pendaftaran')->middleware(['auth', 'is-level']);

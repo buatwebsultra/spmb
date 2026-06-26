@@ -50,28 +50,41 @@
                     </div>
                     @endif
                     <div class="row mb-2">
-                        <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm" >NISN</label>
+                        <label for="colFormLabelSmnik" class="col-sm-2 col-form-label col-form-label-sm" >NIK</label>
                         <div class="col-sm-10 ">
-                            <input type="text" class="form-control form-control-sm {{!$nisn || $nisn_exists ? 'is-invalid' : 'is-valid'}}" wire:model="nisn" id="colFormLabelSm" placeholder="Nomor Induk Siswa Nasional" required>
-                            @if($nisn_exists)
-                            <div id="validationServerUsernameFeedback" class="invalid-feedback">
-                                <small>NISN Sudah Terdaftar</small>
-                              </div>
+                            <input type="text" class="form-control form-control-sm {{ !$nik || $nik_exists || strlen($nik) < 16 || !is_numeric($nik) ? 'is-invalid' : 'is-valid' }}" wire:model="nik" id="colFormLabelSmnik" placeholder="Nomor Induk Kependudukan" required>
+                            @if($nik_exists)
+                            <div class="invalid-feedback">
+                                <small>NIK Sudah Terdaftar</small>
+                            </div>
+                            @elseif($nik && (strlen($nik) < 16 || !is_numeric($nik)))
+                            <div class="invalid-feedback">
+                                <small>NIK harus berupa angka dan minimal 16 digit</small>
+                            </div>
                             @endif
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="colFormLabelSmnik" class="col-sm-2 col-form-label col-form-label-sm" >NIK</label>
+                        <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm" >NISN</label>
                         <div class="col-sm-10 ">
-                            <input type="text" class="form-control form-control-sm " wire:model="nik" id="colFormLabelSmnik" placeholder="Nomor Induk Kependudukan" >
+                            <input type="text" @disabled(!$this->nikValid()) class="form-control form-control-sm {{!$nisn || $nisn_exists || !is_numeric($nisn) ? 'is-invalid' : 'is-valid'}}" wire:model="nisn" id="colFormLabelSm" placeholder="Nomor Induk Siswa Nasional" required>
+                            @if($nisn_exists)
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback">
+                                <small>NISN Sudah Terdaftar</small>
+                              </div>
+                            @elseif($nisn && !is_numeric($nisn))
+                            <div class="invalid-feedback">
+                                <small>NISN harus berupa angka</small>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     <div class="row mb-2">
                         <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">NAMA LENGKAP</label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control form-control-sm {{!$nama_depan ? 'is-invalid' : 'is-valid'}}" wire:model="nama_depan" id="colFormLabelSmd" placeholder="Nama depan" required>
-                                <input type="text" class="form-control form-control-sm" wire:model="nama_belakang" id="colFormLabelSmb" placeholder="Nama belakang">
+                                <input type="text" @disabled(!$this->nikValid()) class="form-control form-control-sm {{!$nama_depan ? 'is-invalid' : 'is-valid'}}" wire:model="nama_depan" id="colFormLabelSmd" placeholder="Nama depan" required>
+                                <input type="text" @disabled(!$this->nikValid()) class="form-control form-control-sm" wire:model="nama_belakang" id="colFormLabelSmb" placeholder="Nama belakang">
                             </div>
                         </div>
                     </div>
@@ -79,11 +92,11 @@
                         <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm ">Jenis Kelamin</label>
                         <div class="col-sm-10">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input  {{!$jenis_kelamin ? 'is-invalid' : 'is-valid'}}" wire:model="jenis_kelamin" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="L">
+                                <input class="form-check-input  {{!$jenis_kelamin ? 'is-invalid' : 'is-valid'}}" @disabled(!$this->nikValid()) wire:model="jenis_kelamin" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="L">
                                 <label class="form-check-label " for="inlineRadio1">Laki-laki</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input  {{!$jenis_kelamin ? 'is-invalid' : 'is-valid'}}" wire:model="jenis_kelamin" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="P">
+                                <input class="form-check-input  {{!$jenis_kelamin ? 'is-invalid' : 'is-valid'}}" @disabled(!$this->nikValid()) wire:model="jenis_kelamin" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="P">
                                 <label class="form-check-label" for="inlineRadio2">Perempuan</label>
                             </div>
                         </div>
@@ -93,8 +106,8 @@
                         <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Tempat Lahir & Tanggal Lahir</label>
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
-                            <input required wire:model="tempat_lahir" type="text" class="form-control form-control-sm {{!$tempat_lahir ? 'is-invalid' : 'is-valid'}}" placeholder="Tempat lahir" aria-label="tempat_lahir" aria-describedby="basic-addon1">
-                            <input required wire:model="tanggal_lahir" type="date" class="form-control form-control-sm {{!$tanggal_lahir ? 'is-invalid' : 'is-valid'}}" placeholder="Tanggal Lahir" aria-label="tanggal_lahir" aria-describedby="basic-addon1">
+                            <input required @disabled(!$this->nikValid()) wire:model="tempat_lahir" type="text" class="form-control form-control-sm {{!$tempat_lahir ? 'is-invalid' : 'is-valid'}}" placeholder="Tempat lahir" aria-label="tempat_lahir" aria-describedby="basic-addon1">
+                            <input required @disabled(!$this->nikValid()) wire:model="tanggal_lahir" type="date" class="form-control form-control-sm {{!$tanggal_lahir ? 'is-invalid' : 'is-valid'}}" placeholder="Tanggal Lahir" aria-label="tanggal_lahir" aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
@@ -102,7 +115,7 @@
                         <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Agama</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-sm mb-2">
-                                <select required wire:model="agama_id" class="form-select form-select-sm {{!$agama_id ? 'is-invalid' : 'is-valid'}}" aria-label="agama_id">
+                                <select required @disabled(!$this->nikValid()) wire:model="agama_id" class="form-select form-select-sm {{!$agama_id ? 'is-invalid' : 'is-valid'}}" aria-label="agama_id">
                                     <option value="" selected>--Agama--</option>
                                     @foreach ($agama as $val)
                                     <option value="{{$val->id}}">{{$val->nama}}</option>
@@ -110,7 +123,7 @@
                                 </select>
 
                                 <span style="width: 100px"class="input-group-text"  id="inputGroup-sizing-default" for="exampleDataListw">Warganegara</span>
-                                <input style="max-width: 120px; width: 120px" list="datalistOptions_w"  wire:model="warganegara" type="text" class="form-control form-control-sm"  placeholder="cth: INDONESIA" aria-label="warganegara" aria-describedby="basic-addon1w">
+                                <input style="max-width: 120px; width: 120px" @disabled(!$this->nikValid()) list="datalistOptions_w"  wire:model="warganegara" type="text" class="form-control form-control-sm"  placeholder="cth: INDONESIA" aria-label="warganegara" aria-describedby="basic-addon1w">
                                 <datalist id="datalistOptions_w">
                                     <option value="INDONESIA">
                                 </datalist>
@@ -120,35 +133,35 @@
                     <div class="row mb-2">
                         <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Alamat</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control form-control-sm mb-2" id="exampleFormControlTextarea1" wire:model.defer="alamat" placeholder="Alamat tempat tinggal" rows="2"></textarea>
+                            <textarea @disabled(!$this->nikValid()) class="form-control form-control-sm mb-2" id="exampleFormControlTextarea1" wire:model.defer="alamat" placeholder="Alamat tempat tinggal" rows="2"></textarea>
                             <div class="input-group input-group-sm mb-2">
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListp">Provinsi</span>
-                                <select wire:model="provinsi_id" class="form-select form-select-sm" id="provinsi_id" aria-label="provinsi_id" required>
+                                <select @disabled(!$this->nikValid()) wire:model="provinsi_id" class="form-select form-select-sm" id="provinsi_id" aria-label="provinsi_id" required>
                                     <option value="" selected>--Provinsi--</option>
                                     @foreach ($provinsi as $val)
                                     <option value="{{$val->id}}">{{$val->nama}}</option>
                                     @endforeach
                                 </select>
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListk">Kab/Kota</span>
-                                <select wire:model="kabkota_id" class="form-select form-select-sm" id="kabkota_id" aria-label="kabkota_id" required>
+                                <select @disabled(!$this->nikValid()) wire:model="kabkota_id" class="form-select form-select-sm" id="kabkota_id" aria-label="kabkota_id" required>
                                     <option value="" selected>--Kab/Kota--</option>
                                     @foreach ($kabkota as $val)
                                     <option value="{{$val->id}}">{{$val->nama}}</option>
                                     @endforeach
                                 </select>
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListp">Kodepos</span>
-                                <input style="max-width: 100px" wire:model="kodepos" type="text" class="form-control form-control-sm" maxlength="5" placeholder="cth: 93111" aria-label="kodepos" aria-describedby="basic-addon1kp">
+                                <input style="max-width: 100px" @disabled(!$this->nikValid()) wire:model="kodepos" type="text" class="form-control form-control-sm" maxlength="5" placeholder="cth: 93111" aria-label="kodepos" aria-describedby="basic-addon1kp">
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListpk">Kecamatan</span>
-                                <select wire:model="kecamatan_id" class="form-select form-select-sm" id="kecamatan_id" aria-label="kecamatan_id" required>
+                                <select @disabled(!$this->nikValid()) wire:model="kecamatan_id" class="form-select form-select-sm" id="kecamatan_id" aria-label="kecamatan_id" required>
                                     <option value="" selected>--Kecamatan--</option>
                                     @foreach ($kecamatan as $val)
                                     <option value="{{$val->id}}">{{$val->nama}}</option>
                                     @endforeach
                                 </select>
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListkl">Kelurahan</span>
-                                <select wire:model="kelurahan_id" class="form-select form-select-sm" id="keluarahan_id" aria-label="keluarahan_id" required>
+                                <select @disabled(!$this->nikValid()) wire:model="kelurahan_id" class="form-select form-select-sm" id="keluarahan_id" aria-label="keluarahan_id" required>
                                     <option value="" selected>--Kelurahan--</option>
                                     @foreach ($kelurahan as $val)
                                     <option value="{{$val->id}}">{{$val->nama}}</option>
@@ -157,15 +170,15 @@
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListpkrt">RT</span>
-                                <input style="max-width: 100px" wire:model="rt" type="text" class="form-control form-control-sm" maxlength="3" placeholder="cth: 001" aria-label="rt" aria-describedby="basic-addon1kprt">
+                                <input style="max-width: 100px" @disabled(!$this->nikValid()) wire:model="rt" type="text" class="form-control form-control-sm" maxlength="3" placeholder="cth: 001" aria-label="rt" aria-describedby="basic-addon1kprt">
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListpkrw">RW</span>
-                                <input style="max-width: 100px" wire:model="rw" type="text" class="form-control form-control-sm" maxlength="3" placeholder="cth: 001" aria-label="rw" aria-describedby="basic-addon1kprw">
+                                <input style="max-width: 100px" @disabled(!$this->nikValid()) wire:model="rw" type="text" class="form-control form-control-sm" maxlength="3" placeholder="cth: 001" aria-label="rw" aria-describedby="basic-addon1kprw">
                                 <span style="width: 80px" class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListpkds">Dusun</span>
-                                <input wire:model="dusun" type="text" class="form-control form-control-sm"  placeholder="Nama dusun" aria-label="dusun" aria-describedby="basic-addon1kpds">
+                                <input @disabled(!$this->nikValid()) wire:model="dusun" type="text" class="form-control form-control-sm"  placeholder="Nama dusun" aria-label="dusun" aria-describedby="basic-addon1kpds">
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span  class="input-group-text" id="inputGroup-sizing-default" for="exampleDataListkljt">Jenis Tinggal</span>
-                                <select wire:model="jenis_tinggal_id" class="form-select form-select-sm" id="jenis_tinggal_id" aria-label="jenis_tinggal_id" required>
+                                <select @disabled(!$this->nikValid()) wire:model="jenis_tinggal_id" class="form-select form-select-sm" id="jenis_tinggal_id" aria-label="jenis_tinggal_id" required>
                                     <option value="" selected>--Jenis--</option>
                                     @foreach ($jenis_tinggal as $val)
                                     <option value="{{$val->id}}">{{$val->keterangan}}</option>
@@ -179,13 +192,22 @@
                     <div class="row mb-2">
                         <label for="colFormLabelSmt" class="col-sm-2 col-form-label col-form-label-sm">Nomor HP./WA.</label>
                         <div class="col-sm-10">
-                            <input required wire:model="hp" type="text" class="form-control form-control-sm  {{!$hp ? 'is-invalid' : 'is-valid'}}" id="colFormLabelSmt" placeholder="cth: 085241667856">
+                            <input required @disabled(!$this->nikValid()) wire:model="hp" type="text" class="form-control form-control-sm  {{ !$hp || $hp_exists || strlen($hp) < 10 || strlen($hp) > 13 || !str_starts_with($hp, '08') || !is_numeric($hp) ? 'is-invalid' : 'is-valid' }}" id="colFormLabelSmt" placeholder="cth: 085241667856">
+                            @if($hp_exists)
+                            <div class="invalid-feedback">
+                                <small>Nomor HP sudah terdaftar</small>
+                            </div>
+                            @elseif($hp && (strlen($hp) < 10 || strlen($hp) > 13 || !str_starts_with($hp, '08') || !is_numeric($hp)))
+                            <div class="invalid-feedback">
+                                <small>Nomor HP harus diawali 08 dan berjumlah 10-13 digit angka</small>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     <div class="row mb-2">
                         <label for="colFormLabelSme" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
                         <div class="col-sm-10">
-                            <input required wire:model="email" type="email" class="form-control form-control-sm  {{!$email ? 'is-invalid' : 'is-valid'}}" id="colFormLabelSme" placeholder="cth: nama_aku@email.com">
+                            <input required readonly wire:model="email" type="email" class="form-control form-control-sm is-valid" id="colFormLabelSme" placeholder="cth: nama_aku@email.com">
                         </div>
                     </div>          
                     

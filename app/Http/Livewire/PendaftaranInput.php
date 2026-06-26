@@ -29,6 +29,8 @@ class PendaftaranInput extends Component
 
     public $setuju;
     public $nisn_exists;
+    public $nik_exists = false;
+    public $hp_exists = false;
 
     public $provinsi = [], $kabkota = [], $jurusan = [], $jurusan2 = [], $jurusan3 = [], $agama = [], $kecamatan=[], $kelurahan=[], $jenis_tinggal=[];
     public $provinsio = [], $kabkotao = [];
@@ -44,8 +46,9 @@ class PendaftaranInput extends Component
 
     protected $rules = [
         'nama_depan' => 'required',
-        'nisn' => 'required',//|unique:d_pendaftaran,nisn',
-        'hp' => 'required',
+        'nisn' => 'required|regex:/^[0-9]+$/',
+        'nik' => 'required|regex:/^[0-9]{16,}$/',
+        'hp' => 'required|regex:/^08[0-9]{8,11}$/',
         'email' => 'required',
         'tempat_lahir' => 'required',
         'tanggal_lahir' => 'required',
@@ -64,9 +67,15 @@ class PendaftaranInput extends Component
     ];
     protected $messages = [
         'nama_depan.required' => 'Nama tidak boleh kosong',
-        // 'nisn.required' => 'NISN tidak boleh kosong',
-        // 'nisn.unique' => 'NISN sudah terdaftar',
+        'nisn.required' => 'NISN tidak boleh kosong',
+        'nisn.regex' => 'NISN harus berupa angka',
+        'nisn.unique' => 'NISN sudah terdaftar',
+        'nik.required' => 'NIK tidak boleh kosong',
+        'nik.regex' => 'NIK harus berupa angka dan minimal 16 digit',
+        'nik.unique' => 'NIK sudah terdaftar',
         'hp.required' => 'NO HP tidak boleh kosong',
+        'hp.regex' => 'NO HP harus diawali 08 dan berjumlah 10-13 digit angka',
+        'hp.unique' => 'NO HP sudah terdaftar',
         'email.required' => 'EMAIL tidak boleh kosong',
         'jenis_kelamin.required' => 'JENIS KELAMIN tidak boleh kosong',
         'jurusan_id.required' => 'JURUSAN tidak boleh kosong',
@@ -109,6 +118,7 @@ class PendaftaranInput extends Component
         ]);
     }
     public function updatedNisn(){
+        $this->nisn = preg_replace('/[^0-9]/', '', $this->nisn);
         if(empty($this->idp)){
             $data = DB::table('d_pendaftaran')->where('nisn', '=', $this->nisn)->first();
             $this->nisn_exists = false;// $data ? true : false;
@@ -133,7 +143,32 @@ class PendaftaranInput extends Component
     public function updatedTanggalLahir(){
         $this->step1();
     }
+    public function updatedNik(){
+        $this->nik = preg_replace('/[^0-9]/', '', $this->nik);
+        if(preg_match('/^[0-9]{16,}$/', $this->nik)) {
+            if(empty($this->idp)){
+                $exists = DB::table('d_pendaftaran')->where('nik', '=', $this->nik)->first();
+            } else {
+                $exists = DB::table('d_pendaftaran')->where('nik', '=', $this->nik)->where('id', '!=', $this->idp)->first();
+            }
+            $this->nik_exists = $exists ? true : false;
+        } else {
+            $this->nik_exists = false;
+        }
+        $this->step1();
+    }
     public function updatedHp(){
+        $this->hp = preg_replace('/[^0-9]/', '', $this->hp);
+        if(preg_match('/^08[0-9]{8,11}$/', $this->hp)) {
+            if(empty($this->idp)){
+                $exists = DB::table('d_pendaftaran')->where('hp', '=', $this->hp)->first();
+            } else {
+                $exists = DB::table('d_pendaftaran')->where('hp', '=', $this->hp)->where('id', '!=', $this->idp)->first();
+            }
+            $this->hp_exists = $exists ? true : false;
+        } else {
+            $this->hp_exists = false;
+        }
         $this->step1();
     }
     public function updatedEmail(){
@@ -198,15 +233,21 @@ class PendaftaranInput extends Component
         $this->tab1 = 'false'; $this->tab2 = 'false'; $this->tab3 = 'true'; 
         $this->emit('updatedStep', 2);
     }
+    public function nikValid() {
+        return $this->nik && preg_match('/^[0-9]{16,}$/', $this->nik) && !$this->nik_exists;
+    }
+    public function hpValid() {
+        return $this->hp && preg_match('/^08[0-9]{8,11}$/', $this->hp) && !$this->hp_exists;
+    }
     public function step1Valid(){
-        return ($this->nama_depan && $this->nisn && $this->jenis_kelamin && $this->tempat_lahir
-             && $this->tanggal_lahir && $this->agama_id && $this->hp && $this->email && (!$this->nisn_exists));
+        return ($this->nikValid() && $this->hpValid() && $this->nama_depan && $this->nisn && $this->jenis_kelamin && $this->tempat_lahir
+             && $this->tanggal_lahir && $this->agama_id && $this->email && (!$this->nisn_exists));
     }
     public function step2Valid(){
         if($this->jenis_daftar>0){
             return $this->jurusan_id>0;
         }else{
-            return ($this->asal_sekolah && $this->asal_sekolah_npsn && $this->jurusan_id && $this->tahun_lulus);
+            return ($this->asal_sekolah && $this->asal_sekolah_npsn && $this->jurusan_id && preg_match('/^[0-9]{4}$/', $this->tahun_lulus));
         }
         
     }
@@ -345,7 +386,13 @@ class PendaftaranInput extends Component
 
         $this->step3();
         if($this->idp>0){
-            $this->rules['nisn'] = 'required|unique:d_pendaftaran,nisn,'.$this->idp;
+            $this->rules['nisn'] = 'required|regex:/^[0-9]+$/|unique:d_pendaftaran,nisn,'.$this->idp;
+            $this->rules['nik'] = 'required|regex:/^[0-9]{16,}$/|unique:d_pendaftaran,nik,'.$this->idp;
+            $this->rules['hp'] = 'required|regex:/^08[0-9]{8,11}$/|unique:d_pendaftaran,hp,'.$this->idp;
+        }else{
+            $this->rules['nisn'] = 'required|regex:/^[0-9]+$/|unique:d_pendaftaran,nisn';
+            $this->rules['nik'] = 'required|regex:/^[0-9]{16,}$/|unique:d_pendaftaran,nik';
+            $this->rules['hp'] = 'required|regex:/^08[0-9]{8,11}$/|unique:d_pendaftaran,hp';
         }
         $this->validate();
 
@@ -459,7 +506,7 @@ class PendaftaranInput extends Component
         
         
         if($this->new_user){
-            $message = 'Silahkan login, Username dan Password telah dikirim ke Email yang anda masukan pada pendaftaran';
+            $message = 'Pendaftaran sukses! Silakan login menggunakan akun (Email & Password) yang telah Anda daftarkan.';
             session()->flash('message', $message);
             return redirect()->to('/login');
         }else{

@@ -51,11 +51,12 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'ends_with:gmail.com'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ],
         [
-            'unique' => 'Email ini sudah digunakan (terdaftar)',
+            'email.unique' => 'Email ini sudah digunakan (terdaftar)',
+            'email.ends_with' => 'Format email harus menggunakan domain gmail.com',
             'required' => 'Data tidak boleh kosong',
             ]
         );
@@ -74,6 +75,23 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'level_id' => 4,
+        ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(\Illuminate\Http\Request $request, $user)
+    {
+        auth()->logout();
+
+        return redirect()->route('login')->with('register_success_modal', [
+            'name' => $user->name,
+            'email' => $user->email,
         ]);
     }
 }
